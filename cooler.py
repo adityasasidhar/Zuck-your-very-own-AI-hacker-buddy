@@ -3,7 +3,6 @@ from google.genai import types
 import subprocess
 import re
 
-context = ""
 with open("apikey.txt", "r") as f:
     api_key = f.read().strip()
 
@@ -40,47 +39,6 @@ def run_command(command: str) -> str:
     except Exception as e:
         return (f"Error running command: {e}")
 
-def check_for_valid_response(response: str) -> bool:
-    """
-    Check if the response contains a valid command.
-
-    Args:
-        response: The response string to check.
-
-    Returns:
-        True if the response is valid, False otherwise.
-    """
-    # Check if the response is empty or None
-    if not response or not isinstance(response, str):
-        return False
-
-    # Check for blocked commands
-    if check_for_blocked_commands(response):
-        return False
-
-    # Check for suspicious patterns
-    suspicious_patterns = [
-        r'(?i)rm\s+-rf\s+/',  # Dangerous rm command
-        r'(?i)mkfs',  # Dangerous mkfs command
-        r'(?i)dd\s+if=/dev/zero',  # Dangerous dd command
-        r'(?i)dd\s+if=/dev/random',  # Dangerous dd command
-        r'(?i):\(\)\{:\|:\};:',  # Fork bomb
-        r'(?i)shutdown',  # System control
-        r'(?i)reboot',  # System control
-        r'(?i)mv\s+/.*\s+/dev/null',  # Move root to null device
-    ]
-
-    for pattern in suspicious_patterns:
-        if re.search(pattern, response):
-            return False
-
-    return True
-def check_for_blocked_commands(command):
-    for blocked_command in COMMAND_BLOCKLIST:
-        if blocked_command in command:
-            return True
-    return False
-
 
 def extract_command_from_response(response: str) -> str | None:
     # Try to extract code block within triple backticks
@@ -96,11 +54,17 @@ def extract_command_from_response(response: str) -> str | None:
     return None
 
 
-client = genai.Client(api_key=api_key)
+def check_for_blocked_commands(command):
+    for blocked_command in COMMAND_BLOCKLIST:
+        if blocked_command in command:
+            return True
+    return False
+
 
 user_prompt = "LETS SCAN MY WIFI. I am using Pop!_OS (Linux) based operating"
-context = context + user_prompt
 
+
+client = genai.Client(api_key=api_key)
 response = client.models.generate_content(
     model="gemini-2.0-flash",
     config=types.GenerateContentConfig(
@@ -141,12 +105,8 @@ TOOLS YOU HAVE ACCESS TO:
 6. DNSUTILS
 7. AIRCRACK-NG
 
-Here's the beginning of the conversation:
-
-{context}
 """
     ),
-
 # nmap	Scan IPs, ports, services
 # netcat	Network connections, port listening
 # curl / wget	Web requests, file downloads
@@ -157,21 +117,4 @@ Here's the beginning of the conversation:
 # aircrack-ng	Basic Wi-Fi sniffing/cracking
 contents=user_prompt,
 )
-while True:
-    Response = response.text
-    Response = str(Response)
-    Response = "LLM response: " + Response
-    context = context + Response
-    print(Response)
-    command = extract_command_from_response(Response)
-    if command is False:
-        print("No command found in response.")
-        break
-    if command is None:
-        print("No command found in response.")
-        break
-    else:
-        terminal_output = run_command(command)
-        terminal_output = "Terminal output: " + terminal_output
-        context = context + terminal_output
 
