@@ -1,6 +1,9 @@
 from google import genai
 
-client = genai.Client(api_key='AIzaSyCbKnqJV9LNu8XxxSoYkAlFYyLLvy1NnMo')
+with open("apikey.txt", "r") as f:
+    api_key = f.read().strip()
+
+client = genai.Client(api_key=api_key)
 chat = client.chats.create(model="gemini-2.0-flash")
 
 response = chat.send_message("I have 2 dogs in my house.")
