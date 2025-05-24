@@ -1,6 +1,7 @@
 from google import genai
 from google.genai import types
 import subprocess
+import platform
 import re
 
 with open("apikey.txt", "r") as f:
@@ -21,11 +22,20 @@ COMMAND_BLOCKLIST = [
     'rm -rf /tmp/*',
     'rm -rf /var/tmp/*',
     'rm -rf /home/*',
-    'rm -rf /root/*','fdisk', 'parted', 'dd ',  # Disk formatting/writing, very dangerous
+    'rm -rf /root/*','fdisk', 'parted', 'dd ',
     ':(){:|:&};:',  # Fork bomb
     'shutdown', 'reboot',
     'mv / /dev/null',
 ]
+
+device_info = (
+    f"System: {platform.system()}\n"
+    f"Node: {platform.node()}\n"
+    f"Release: {platform.release()}\n"
+    f"Version: {platform.version()}\n"
+    f"Machine: {platform.machine()}\n"
+    f"Processor: {platform.processor()}"
+)
 
 def check_for_blocked_commands(command):
     for blocked_command in COMMAND_BLOCKLIST:
@@ -100,11 +110,12 @@ TOOLS YOU HAVE ACCESS TO, THESE HAVE BEEN INSTALLED ON YOUR SYSTEM ALREADY:
 2. WHOIS
 3. TCPDUMP
 4. TSHARK
-5. NETCAT
+5. NETCAT-
 6. DNSUTILS
 7. AIRCRACK-NG
 
 ONCE YOUR JOB IS DONE, YOU WILL HAVE TO COMPLETELY STOP GIVING OUTPUTS AND YOU WILL HAVE TO STOP RESPONDING TO THE USER.
+
 """)
 print(response.text)
 
