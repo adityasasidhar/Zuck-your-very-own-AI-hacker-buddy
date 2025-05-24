@@ -27,8 +27,8 @@ A cybersecurity-focused AI assistant powered by Google's Gemini 2.0 Flash model.
 
 1. Clone this repository:
    ```
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/adityasasidhar/Zuck-your-very-own-AI-hacker-buddy.git
+   cd Zuck-your-very-own-AI-hacker-buddy
    ```
 
 2. Install required Python packages:
