@@ -28,6 +28,7 @@ COMMAND_BLOCKLIST = [
     'mv / /dev/null',
 ]
 
+# you can also pass this into the initial chat for even improved performance
 device_info = (
     f"System: {platform.system()}\n"
     f"Node: {platform.node()}\n"
@@ -36,6 +37,15 @@ device_info = (
     f"Machine: {platform.machine()}\n"
     f"Processor: {platform.processor()}"
 )
+device_info = str(device_info)
+
+# you can also pass this into the initial chat to give the agent an even greater power and command access
+
+system_info = """
+Here's the username: root
+        password: root
+        
+        """
 
 def check_for_blocked_commands(command):
     for blocked_command in COMMAND_BLOCKLIST:
