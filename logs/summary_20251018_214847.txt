@@ -1,0 +1,63 @@
+================================================================================
+ZUCK AGENT SESSION SUMMARY
+Session ID: 20251018_214847
+================================================================================
+
+SESSION STATISTICS
+--------------------------------------------------------------------------------
+Session Id: 20251018_214847
+Duration: 0:00:44.068846
+Total Commands: 1
+Successful: 1
+Blocked: 0
+Failed: 0
+Errors: 0
+Warnings: 0
+Success Rate: 100.0%
+
+================================================================================
+
+TOKEN USAGE
+--------------------------------------------------------------------------------
+Session Id: 20251018_214847
+Total Api Calls: 3
+Total Prompt Tokens: 2665
+Total Completion Tokens: 391
+Total Tokens: 4484
+Average Tokens Per Call: 1494.67
+Estimated Cost: $0.000384
+Session Duration: 0:00:43.995916
+
+================================================================================
+
+PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+Total Commands: 1
+Total Api Calls: 3
+Avg Command Execution Time: 0.001s
+Avg Api Response Time: 6.563s
+Total Session Time: 0:00:43.995923
+
+================================================================================
+
+SECURITY SUMMARY
+--------------------------------------------------------------------------------
+Total Commands Analyzed: 1
+Blocked Commands: 0
+Safe Commands: 1
+Low Risk: 0
+Medium Risk: 0
+High Risk: 0
+Critical Risk: 0
+
+================================================================================
+
+COMMAND HISTORY
+--------------------------------------------------------------------------------
+
+1. Command: cat /etc/os-release
+   Status: success
+   Time: 0.001s
+   Security Level: SecurityLevel.SAFE
+
+================================================================================

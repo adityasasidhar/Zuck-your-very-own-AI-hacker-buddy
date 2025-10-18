@@ -371,7 +371,7 @@ class AgentConfig(BaseModel):
         ]
     )
     api_key_file: str = "apikey.txt"
-    model_name: str = "gemini-2.0-flash-exp"
+    model_name: str = "gemini-2.5-pro"
     temperature: float = Field(default=0.3, ge=0.0, le=2.0)
     log_directory: str = "logs"
     save_session_data: bool = True

@@ -1,0 +1,54 @@
+2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:587] - ================================================================================
+2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:588] - Initializing Zuck Agent
+2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:589] - Session ID: 20251018_214823
+2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:590] - ================================================================================
+2025-10-18 21:48:23 - zuck_agent - CRITICAL - [main.py:609] - API key file not found: apikey.txt
+2025-10-18 21:48:23 - zuck_agent - CRITICAL - [main.py:620] - Failed to load API key: API key file not found: apikey.txt
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:587] - ================================================================================
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:588] - Initializing Zuck Agent
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:589] - Session ID: 20251018_214847
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:590] - ================================================================================
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:617] - API key loaded successfully
+2025-10-18 21:48:47 - zuck_agent - DEBUG - [main.py:443] - CommandValidator initialized
+2025-10-18 21:48:47 - zuck_agent - DEBUG - [main.py:486] - CommandExecutor initialized
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:298] - System info gathered: Linux 6.16.3-76061603-generic
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:603] - Configuration: {"max_commands":50,"command_timeout":30,"max_command_length":1000,"allowed_tools":["nmap","whois","tcpdump","tshark","nc","netcat","dig","nslookup","host","aircrack-ng","airodump-ng","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","traceroute","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"api_key_file":"apikey.txt","model_name":"gemini-2.5-pro","temperature":0.3,"log_directory":"logs","save_session_data":true}
+2025-10-18 21:48:47 - zuck_agent - INFO - [main.py:625] - Initializing chat session...
+2025-10-18 21:48:55 - zuck_agent - DEBUG - [main.py:135] - Token usage - Prompt: 675, Completion: 127, Total: 1318, Cost: $0.000106
+2025-10-18 21:48:55 - zuck_agent - INFO - [main.py:660] - Chat initialized successfully in 7.239s
+2025-10-18 21:48:55 - zuck_agent - INFO - [main.py:661] - Model: gemini-2.5-pro, Temperature: 0.3
+2025-10-18 21:49:19 - zuck_agent - INFO - [main.py:806] - ================================================================================
+2025-10-18 21:49:19 - zuck_agent - INFO - [main.py:807] - Starting session: 20251018_214847
+2025-10-18 21:49:19 - zuck_agent - INFO - [main.py:808] - User request: check my linux distro name
+2025-10-18 21:49:19 - zuck_agent - INFO - [main.py:809] - ================================================================================
+2025-10-18 21:49:19 - zuck_agent - INFO - [main.py:817] - Sending initial request to AI...
+2025-10-18 21:49:19 - zuck_agent - DEBUG - [main.py:698] - Sending message (length: 26)
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:135] - Token usage - Prompt: 809, Completion: 163, Total: 1819, Cost: $0.000130
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:716] - Received response in 9.836s (length: 605)
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:672] - Parsing response (length: 605)
+2025-10-18 21:49:29 - zuck_agent - INFO - [main.py:683] - Parsed proposal: action=execute_command, plan=Display the contents of the /etc/os-release file t...
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:726] - Processing proposal: execute_command
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:453] - Validating command: cat /etc/os-release
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:413] - Analyzing command security: cat /etc/os-release...
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:436] - Command passed security checks
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:465] - Validation completed in 0.001s
+2025-10-18 21:49:29 - zuck_agent - INFO - [main.py:492] - Executing command: cat /etc/os-release
+2025-10-18 21:49:29 - zuck_agent - INFO - [main.py:513] - Command succeeded in 0.001s
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:519] - Output length: 373 characters
+2025-10-18 21:49:29 - zuck_agent - INFO - [main.py:321] - ✓ Command succeeded: cat /etc/os-release...
+2025-10-18 21:49:29 - zuck_agent - INFO - [main.py:838] - Loop iteration 1
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:853] - Sending feedback to AI: status=success
+2025-10-18 21:49:29 - zuck_agent - DEBUG - [main.py:698] - Sending message (length: 515)
+2025-10-18 21:49:31 - zuck_agent - DEBUG - [main.py:135] - Token usage - Prompt: 1181, Completion: 101, Total: 1347, Cost: $0.000148
+2025-10-18 21:49:31 - zuck_agent - DEBUG - [main.py:716] - Received response in 2.615s (length: 343)
+2025-10-18 21:49:31 - zuck_agent - DEBUG - [main.py:672] - Parsing response (length: 343)
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:683] - Parsed proposal: action=complete, plan=The task of identifying the Linux distribution has...
+2025-10-18 21:49:31 - zuck_agent - DEBUG - [main.py:726] - Processing proposal: complete
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:729] - Task completed: As confirmed by the output, your Linux distribution is Pop!_OS 22.04 LTS. What is your next security task?
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:336] - Session completed - Duration: 0:00:44.068846, Commands: 1, Blocked: 0, Failed: 0
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:943] - Summary displayed to user
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:1011] - Session data saved: logs/session_20251018_214847.json
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:1062] - Summary saved: logs/summary_20251018_214847.txt
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:884] - ================================================================================
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:885] - Session completed successfully
+2025-10-18 21:49:31 - zuck_agent - INFO - [main.py:886] - ================================================================================
