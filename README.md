@@ -71,16 +71,6 @@ python main.py
 
 This will start Zuck, the cybersecurity assistant. You can ask it questions related to cybersecurity and system administration, and it will suggest appropriate terminal commands.
 
-### Simple Chat Implementation
-
-For a basic demonstration of the Gemini chat functionality:
-
-```
-python "chat_based_implementation.py"
-```
-
-This runs a simplified version that demonstrates basic chat interaction without the cybersecurity features.
-
 ## How It Works
 
 1. The assistant receives your query about a cybersecurity or system administration task
@@ -89,6 +79,21 @@ This runs a simplified version that demonstrates basic chat interaction without 
 4. Upon your confirmation, the command is executed
 5. The output is fed back to the assistant for further analysis
 6. The conversation continues with additional commands as needed
+
+# Run the agent
+python zuck_agent.py
+
+# View analytics for latest session
+python analytics.py --latest
+
+# List all sessions
+python analytics.py --list
+
+# Generate report for specific session
+python analytics.py --report 20241018_143022
+
+# Compare multiple sessions
+python analytics.py --compare 20241018_143022 20241018_150134
 
 ## Safety Features
 
