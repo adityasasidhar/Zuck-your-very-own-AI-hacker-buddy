@@ -30,20 +30,20 @@ A cybersecurity-focused AI assistant powered by **LangChain** with support for m
 
 1. Clone this repository:
 
-   ```
+   ```bash
    git clone https://github.com/adityasasidhar/Zuck-your-very-own-AI-hacker-buddy.git
    cd Zuck-your-very-own-AI-hacker-buddy
    ```
 
 2. Install required Python packages:
 
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
 3. Create an API key file:
 
-   ```
+   ```bash
    echo "YOUR_GOOGLE_API_KEY" > apikey.txt
    ```
 
@@ -120,7 +120,7 @@ config = AgentConfig(
 
 Run the main implementation for the full cybersecurity assistant experience:
 
-```
+```bash
 python main.py
 ```
 
@@ -135,25 +135,29 @@ This will start Zuck, the cybersecurity assistant. You can ask it questions rela
 5. The output is fed back to the assistant for further analysis
 6. The conversation continues with additional commands as needed
 
-# Run the agent
+### View analytics for latest session
 
-python zuck_agent.py
-
-# View analytics for latest session
-
+```bash
 python analytics.py --latest
+```
 
-# List all sessions
+### List all sessions
 
+```bash
 python analytics.py --list
+```
 
-# Generate report for specific session
+### Generate report for specific session
 
+```bash
 python analytics.py --report 20241018_143022
+```
 
-# Compare multiple sessions
+### Compare multiple sessions
 
+```bash
 python analytics.py --compare 20241018_143022 20241018_150134
+```
 
 ## Safety Features
 
@@ -172,4 +176,3 @@ python analytics.py --compare 20241018_143022 20241018_150134
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
