@@ -1,3 +1,6 @@
 .venv
 apikey.txt
 virustotalapikey.txt
+LANGCHAIN_GUIDE.md
+__pycache__/
+test_langchain.py

@@ -1,18 +1,21 @@
 # Zuck - AI Cybersecurity Agent
 
-A cybersecurity-focused AI assistant powered by Google's Gemini 2.0 Flash model. This project provides an interactive terminal interface for cybersecurity and system administration tasks on Linux systems.
+A cybersecurity-focused AI assistant powered by **LangChain** with support for multiple LLM providers (Google Gemini, OpenAI, Anthropic Claude, Ollama). This project provides an interactive terminal interface for cybersecurity and system administration tasks on Linux systems.
 
 ## Features
 
+- **Multi-Provider LLM Support**: Easily switch between Google Gemini, OpenAI, Anthropic, or local Ollama models
 - **AI-Powered Command Generation**: Suggests terminal commands for cybersecurity tasks
 - **Safety Measures**: Includes command blocklisting and validation to prevent destructive operations
 - **Specialized Tools Access**: Pre-configured to work with common cybersecurity tools
 - **Interactive Interface**: Continuous conversation flow with command execution feedback
+- **Token Tracking**: Monitor API usage and costs across all providers
+- **Comprehensive Logging**: Detailed session logs and analytics
 
 ## Prerequisites
 
 - Python 3.7 or higher
-- Google API key for Gemini (https://ai.google.dev/)
+- Google API key for Gemini (<https://ai.google.dev/>)
 - Linux-based operating system ( will work in macos and windows too with adjustment)
 - The following cybersecurity tools (for full functionality), you could add more if you like:
   - NMAP
@@ -26,20 +29,24 @@ A cybersecurity-focused AI assistant powered by Google's Gemini 2.0 Flash model.
 ## Installation
 
 1. Clone this repository:
+
    ```
    git clone https://github.com/adityasasidhar/Zuck-your-very-own-AI-hacker-buddy.git
    cd Zuck-your-very-own-AI-hacker-buddy
    ```
 
 2. Install required Python packages:
+
    ```
    pip install -r requirements.txt
    ```
 
 3. Create an API key file:
+
    ```
    echo "YOUR_GOOGLE_API_KEY" > apikey.txt
    ```
+
    Replace `YOUR_GOOGLE_API_KEY` with your actual Google Gemini API key.
 
 ## Setup
@@ -54,10 +61,58 @@ A cybersecurity-focused AI assistant powered by Google's Gemini 2.0 Flash model.
 
 ### Installing Required Tools (Ubuntu/Debian/Pop!_OS)
 
-```
+```bash
 sudo apt update
 sudo apt install nmap whois tcpdump tshark netcat dnsutils aircrack-ng
 ```
+
+## LLM Provider Configuration
+
+Zuck now uses **LangChain** and supports multiple LLM providers. By default, it uses Google Gemini.
+
+### Quick Start (Google Gemini - Default)
+
+The default configuration uses Google Gemini. Just ensure your API key is in `apikey.txt`:
+
+```bash
+echo "YOUR_GOOGLE_API_KEY" > apikey.txt
+python main.py
+```
+
+### Switching Providers
+
+To use a different provider, modify the configuration in your code or create a config file:
+
+**OpenAI:**
+
+```python
+config = AgentConfig(
+    provider="openai",
+    model_name="gpt-4",
+    openai_api_key="sk-..."  # or set OPENAI_API_KEY env var
+)
+```
+
+**Anthropic Claude:**
+
+```python
+config = AgentConfig(
+    provider="anthropic",
+    model_name="claude-3-5-sonnet-20241022",
+    anthropic_api_key="sk-ant-..."  # or set ANTHROPIC_API_KEY env var
+)
+```
+
+**Ollama (Local):**
+
+```python
+config = AgentConfig(
+    provider="ollama",
+    model_name="llama3.1"  # No API key needed!
+)
+```
+
+📖 **For detailed configuration instructions, see [LANGCHAIN_GUIDE.md](LANGCHAIN_GUIDE.md)**
 
 ## Usage
 
@@ -81,18 +136,23 @@ This will start Zuck, the cybersecurity assistant. You can ask it questions rela
 6. The conversation continues with additional commands as needed
 
 # Run the agent
+
 python zuck_agent.py
 
 # View analytics for latest session
+
 python analytics.py --latest
 
 # List all sessions
+
 python analytics.py --list
 
 # Generate report for specific session
+
 python analytics.py --report 20241018_143022
 
 # Compare multiple sessions
+
 python analytics.py --compare 20241018_143022 20241018_150134
 
 ## Safety Features
@@ -113,7 +173,3 @@ python analytics.py --compare 20241018_143022 20241018_150134
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-
-- Google Gemini API for providing the AI capabilities
-- Contributors and maintainers of the cybersecurity tools used in this project

@@ -1,0 +1,46 @@
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:612] - ================================================================================
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:613] - Initializing Zuck Agent
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:614] - Session ID: 20251202_201922
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:615] - ================================================================================
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:634] - Creating chat model for provider: google
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:707] - Google API key loaded successfully
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:646] - Initialized Google Gemini: gemini-2.0-flash-exp
+2025-12-02 20:19:22 - zuck_agent - DEBUG - [main.py:468] - CommandValidator initialized
+2025-12-02 20:19:22 - zuck_agent - DEBUG - [main.py:511] - CommandExecutor initialized
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: whois
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: tshark
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: dig
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: nslookup
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: aircrack-ng
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: airodump-ng
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: traceroute
+2025-12-02 20:19:22 - zuck_agent - [33mWARNING[0m - [main.py:302] - Tool not found: cd
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:313] - System info gathered: Linux 6.17.4-76061704-generic
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:314] - Available tools: nmap, tcpdump, nc, netcat, host, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:628] - Configuration: {"max_commands":5,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","whois","tcpdump","tshark","nc","netcat","dig","nslookup","host","aircrack-ng","airodump-ng","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","traceroute","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.0-flash-exp","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2025-12-02 20:19:22 - zuck_agent - [32mINFO[0m - [main.py:715] - Initializing chat session...
+2025-12-02 20:19:22 - zuck_agent - [35mCRITICAL[0m - [main.py:745] - Initialization failed: No content messages found. The Gemini API requires at least one non-system message (HumanMessage, AIMessage, etc.) in addition to any SystemMessage. Please include additional messages in your input.
+2025-12-02 20:19:22 - zuck_agent - DEBUG - [main.py:746] - Traceback (most recent call last):
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/main.py", line 730, in initialize
+    response = self.chat_model.invoke(self.chat_history)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2138, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 398, in invoke
+    self.generate_prompt(
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1117, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 927, in generate
+    self._generate_with_cache(
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1221, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2279, in _generate
+    request = self._prepare_request(
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aditya/PycharmProjects/Zuck-your-very-own-AI-hacker-buddy/.venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2563, in _prepare_request
+    raise ValueError(msg)
+ValueError: No content messages found. The Gemini API requires at least one non-system message (HumanMessage, AIMessage, etc.) in addition to any SystemMessage. Please include additional messages in your input.
+

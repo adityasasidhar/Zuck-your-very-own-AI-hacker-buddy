@@ -1,0 +1,88 @@
+================================================================================
+ZUCK AGENT SESSION SUMMARY
+Session ID: 20251202_195350
+================================================================================
+
+SESSION STATISTICS
+--------------------------------------------------------------------------------
+Session Id: 20251202_195350
+Duration: 0:04:22.876771
+Total Commands: 6
+Successful: 2
+Blocked: 0
+Failed: 3
+Errors: 0
+Warnings: 0
+Success Rate: 33.3%
+
+================================================================================
+
+TOKEN USAGE
+--------------------------------------------------------------------------------
+Session Id: 20251202_195350
+Total Api Calls: 8
+Total Prompt Tokens: 12228
+Total Completion Tokens: 1624
+Total Tokens: 18493
+Average Tokens Per Call: 2311.62
+Estimated Cost: $0.001710
+Session Duration: 0:04:22.877414
+
+================================================================================
+
+PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+Total Commands: 5
+Total Api Calls: 8
+Avg Command Execution Time: 0.044s
+Avg Api Response Time: 9.840s
+Total Session Time: 0:04:22.877438
+
+================================================================================
+
+SECURITY SUMMARY
+--------------------------------------------------------------------------------
+Total Commands Analyzed: 6
+Blocked Commands: 0
+Safe Commands: 6
+Low Risk: 0
+Medium Risk: 0
+High Risk: 0
+Critical Risk: 0
+
+================================================================================
+
+COMMAND HISTORY
+--------------------------------------------------------------------------------
+
+1. Command: ip route | grep default
+   Status: success
+   Time: 0.004s
+   Security Level: SecurityLevel.SAFE
+
+2. Command: nmap -sV -O --script=vuln 10.215.205.195
+   Status: failed
+   Time: 0.076s
+   Security Level: SecurityLevel.SAFE
+
+3. Command: sudo nmap -sV -O --script=vuln 10.215.205.195
+   Status: timeout
+   Time: 30.021s
+   Security Level: SecurityLevel.SAFE
+
+4. Command: sudo nmap -T4 -F 10.215.205.195
+   Status: success
+   Time: 0.136s
+   Security Level: SecurityLevel.SAFE
+
+5. Command: dig @10.215.205.195 google.com
+   Status: failed
+   Time: 0.001s
+   Security Level: SecurityLevel.SAFE
+
+6. Command: nslookup google.com 10.215.205.195
+   Status: failed
+   Time: 0.001s
+   Security Level: SecurityLevel.SAFE
+
+================================================================================
