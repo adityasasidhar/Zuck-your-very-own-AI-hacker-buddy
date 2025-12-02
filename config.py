@@ -17,7 +17,7 @@ class AgentConfig(BaseModel):
     
     # LLM Provider Configuration
     provider: str = Field(default="google", description="LLM provider: google, openai, anthropic, ollama")
-    model_name: str = Field(default="gemini-2.0-flash-exp", description="Model name for the selected provider")
+    model_name: str = Field(default="gemini-2.5-flash", description="Model name for the selected provider")
     temperature: float = Field(default=0.3, ge=0.0, le=2.0)
     
     # API Keys
