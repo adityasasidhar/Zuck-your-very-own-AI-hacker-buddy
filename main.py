@@ -15,6 +15,7 @@ import json
 from dataclasses import dataclass
 from collections import defaultdict
 import traceback
+import time
 
 
 # ==================== Logging Configuration ====================
@@ -286,6 +287,15 @@ class SystemInfo(BaseModel):
 
     @classmethod
     def gather(cls, available_tools: List[str]) -> 'SystemInfo':
+        import shutil
+        
+        installed_tools = []
+        for tool in available_tools:
+            if shutil.which(tool):
+                installed_tools.append(tool)
+            else:
+                logger.warning(f"Tool not found: {tool}")
+
         info = cls(
             system=platform.system(),
             node=platform.node(),
@@ -293,9 +303,10 @@ class SystemInfo(BaseModel):
             version=platform.version(),
             machine=platform.machine(),
             processor=platform.processor(),
-            available_tools=available_tools
+            available_tools=installed_tools
         )
         logger.info(f"System info gathered: {info.system} {info.release}")
+        logger.info(f"Available tools: {', '.join(installed_tools)}")
         return info
 
 
@@ -358,7 +369,7 @@ class SessionState(BaseModel):
 
 class AgentConfig(BaseModel):
     max_commands: int = Field(default=50, gt=0, le=200)
-    command_timeout: int = Field(default=30, gt=0, le=300)
+    command_timeout: int = Field(default=60, gt=0, le=300)
     max_command_length: int = Field(default=1000, gt=0)
     allowed_tools: List[str] = Field(
         default_factory=lambda: [
@@ -694,33 +705,49 @@ Respond with JSON only."""
             return None
 
     def send_message(self, message: str) -> Optional[str]:
-        try:
-            logger.debug(f"Sending message (length: {len(message)})")
+        max_retries = 3
+        base_delay = 2
+        
+        for attempt in range(max_retries + 1):
+            try:
+                logger.debug(f"Sending message (length: {len(message)})")
 
-            start_time = datetime.now()
-            response = self.chat.send_message(message)
-            api_time = (datetime.now() - start_time).total_seconds()
+                start_time = datetime.now()
+                response = self.chat.send_message(message)
+                api_time = (datetime.now() - start_time).total_seconds()
 
-            self.metrics.add_api_time(api_time)
+                self.metrics.add_api_time(api_time)
 
-            # Track token usage
-            if hasattr(response, 'usage_metadata') and response.usage_metadata:
-                usage = TokenUsage(
-                    prompt_tokens=getattr(response.usage_metadata, 'prompt_token_count', 0),
-                    completion_tokens=getattr(response.usage_metadata, 'candidates_token_count', 0),
-                    total_tokens=getattr(response.usage_metadata, 'total_token_count', 0),
-                    model=self.config.model_name
-                )
-                self.token_tracker.add_usage(usage)
+                # Track token usage
+                if hasattr(response, 'usage_metadata') and response.usage_metadata:
+                    usage = TokenUsage(
+                        prompt_tokens=getattr(response.usage_metadata, 'prompt_token_count', 0),
+                        completion_tokens=getattr(response.usage_metadata, 'candidates_token_count', 0),
+                        total_tokens=getattr(response.usage_metadata, 'total_token_count', 0),
+                        model=self.config.model_name
+                    )
+                    self.token_tracker.add_usage(usage)
 
-            logger.debug(f"Received response in {api_time:.3f}s (length: {len(response.text)})")
+                logger.debug(f"Received response in {api_time:.3f}s (length: {len(response.text)})")
 
-            return response.text
+                return response.text
 
-        except Exception as e:
-            logger.error(f"Failed to send message: {e}")
-            logger.debug(traceback.format_exc())
-            return None
+            except Exception as e:
+                error_str = str(e)
+                if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                    if attempt < max_retries:
+                        delay = base_delay * (2 ** attempt)
+                        logger.warning(f"API quota exceeded (429). Retrying in {delay}s... (Attempt {attempt + 1}/{max_retries})")
+                        print(f"\n⏳ API quota exceeded. Retrying in {delay}s...")
+                        time.sleep(delay)
+                        continue
+                    else:
+                        logger.error("Max retries exceeded for API quota error")
+                        print("\n❌ Max retries exceeded. Please check your API quota.")
+                
+                logger.error(f"Failed to send message: {e}")
+                logger.debug(traceback.format_exc())
+                return None
 
     def process_proposal(self, proposal: CommandProposal) -> Optional[CommandResult]:
         logger.debug(f"Processing proposal: {proposal.action}")
@@ -1234,7 +1261,7 @@ def main():
         print("  • Look up DNS records for google.com")
         print("")
 
-        user_request = input("🎯 What would you like me to help with? ").strip()
+        user_request = input("🎯 What would you like me to help with? :  ").strip()
 
         if not user_request:
             print("\n❌ No request provided. Exiting.")
@@ -1258,6 +1285,9 @@ def main():
     except KeyboardInterrupt:
         print("\n\n⚠️  Session interrupted by user")
         logger.info("Session interrupted by user (KeyboardInterrupt)")
+        if 'agent' in locals():
+            agent.session.complete()
+            agent._save_session_data()
         sys.exit(0)
 
     except Exception as e:
