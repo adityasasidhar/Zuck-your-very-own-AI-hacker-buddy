@@ -1,17 +1,22 @@
+"""
+Logging setup with colors and file rotation.
+"""
+
 import logging
 import sys
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
+
 class LogFormatter(logging.Formatter):
-    """Custom formatter with colors for console output"""
+    """Custom formatter with colors for console output."""
 
     COLORS = {
-        'DEBUG': '\033[36m',  # Cyan
-        'INFO': '\033[32m',  # Green
+        'DEBUG': '\033[36m',    # Cyan
+        'INFO': '\033[32m',     # Green
         'WARNING': '\033[33m',  # Yellow
-        'ERROR': '\033[31m',  # Red
-        'CRITICAL': '\033[35m',  # Magenta
+        'ERROR': '\033[31m',    # Red
+        'CRITICAL': '\033[35m', # Magenta
     }
     RESET = '\033[0m'
 
@@ -23,8 +28,16 @@ class LogFormatter(logging.Formatter):
 
 
 def setup_logging(session_id: str, log_dir: str = "logs") -> logging.Logger:
-    """Setup comprehensive logging system"""
-
+    """
+    Setup comprehensive logging system.
+    
+    Args:
+        session_id: Unique session identifier
+        log_dir: Directory for log files
+        
+    Returns:
+        Configured logger instance
+    """
     # Create logs directory
     log_path = Path(log_dir)
     log_path.mkdir(exist_ok=True)

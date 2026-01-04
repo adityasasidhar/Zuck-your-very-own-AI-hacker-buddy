@@ -1,30 +1,42 @@
+"""
+Pydantic models for agent operations.
+"""
+
 from enum import Enum
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field, validator, ConfigDict
 
+
 class CommandStatus(str, Enum):
+    """Status of command execution."""
     SUCCESS = "success"
     FAILED = "failed"
     BLOCKED = "blocked"
     TIMEOUT = "timeout"
     ERROR = "error"
 
+
 class AgentAction(str, Enum):
+    """Actions the agent can take."""
     EXECUTE_COMMAND = "execute_command"
     USE_TOOL = "use_tool"
     REQUEST_CLARIFICATION = "request_clarification"
     COMPLETE = "complete"
     ABORT = "abort"
 
+
 class SecurityLevel(str, Enum):
+    """Security risk level for commands."""
     SAFE = "safe"
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
+
 class CommandProposal(BaseModel):
+    """Proposal from the LLM for an action to take."""
     model_config = ConfigDict(use_enum_values=True)
 
     action: AgentAction = Field(description="The action type")
@@ -49,7 +61,9 @@ class CommandProposal(BaseModel):
             raise ValueError("Tool name required for use_tool action")
         return v
 
+
 class CommandResult(BaseModel):
+    """Result of command execution."""
     model_config = ConfigDict(use_enum_values=True)
 
     command: str
@@ -61,8 +75,9 @@ class CommandResult(BaseModel):
     blocked_reason: Optional[str] = None
     security_level: SecurityLevel = SecurityLevel.SAFE
 
+
 class TokenUsage(BaseModel):
-    """Token usage for a single API call"""
+    """Token usage for a single API call."""
     prompt_tokens: int = 0
     completion_tokens: int = 0
     total_tokens: int = 0
@@ -71,7 +86,7 @@ class TokenUsage(BaseModel):
 
     @property
     def cost_estimate(self) -> float:
-        """Estimate cost based on Gemini pricing (approximate)"""
+        """Estimate cost based on Gemini pricing (approximate)."""
         # Gemini 2.0 Flash pricing (approximate, check current rates)
         prompt_cost_per_1k = 0.0001  # $0.0001 per 1K input tokens
         completion_cost_per_1k = 0.0003  # $0.0003 per 1K output tokens
@@ -80,48 +95,3 @@ class TokenUsage(BaseModel):
         completion_cost = (self.completion_tokens / 1000) * completion_cost_per_1k
 
         return prompt_cost + completion_cost
-
-class SessionState(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    session_id: str = Field(default_factory=lambda: datetime.now().strftime("%Y%m%d_%H%M%S"))
-    commands_executed: int = 0
-    commands_blocked: int = 0
-    commands_failed: int = 0
-    start_time: datetime = Field(default_factory=datetime.now)
-    end_time: Optional[datetime] = None
-    is_active: bool = True
-    command_history: List[CommandResult] = Field(default_factory=list)
-    error_count: int = 0
-    warning_count: int = 0
-
-    def add_result(self, result: CommandResult):
-        self.command_history.append(result)
-
-        if result.status == CommandStatus.SUCCESS:
-            self.commands_executed += 1
-        elif result.status == CommandStatus.BLOCKED:
-            self.commands_blocked += 1
-        elif result.status == CommandStatus.FAILED:
-            self.commands_failed += 1
-        elif result.status == CommandStatus.ERROR:
-            self.error_count += 1
-
-    def complete(self):
-        self.is_active = False
-        self.end_time = datetime.now()
-
-    def get_summary(self) -> Dict[str, Any]:
-        duration = (self.end_time or datetime.now()) - self.start_time
-
-        return {
-            "session_id": self.session_id,
-            "duration": str(duration),
-            "total_commands": len(self.command_history),
-            "successful": self.commands_executed,
-            "blocked": self.commands_blocked,
-            "failed": self.commands_failed,
-            "errors": self.error_count,
-            "warnings": self.warning_count,
-            "success_rate": f"{(self.commands_executed / max(len(self.command_history), 1) * 100):.1f}%"
-        }

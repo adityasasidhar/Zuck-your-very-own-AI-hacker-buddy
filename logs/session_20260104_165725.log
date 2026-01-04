@@ -1,0 +1,22 @@
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:87] - ================================================================================
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:88] - Initializing Zuck Agent
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:89] - Session ID: 20260104_165725
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:90] - ================================================================================
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:120] - Creating chat model for provider: google
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:193] - Google API key loaded successfully
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:132] - Initialized Google Gemini: gemini-2.5-flash
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:98] - Initialized 10 tools
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:103] - Tools bound to chat model
+2026-01-04 16:57:25 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-04 16:57:25 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-04 16:57:25 - zuck_agent - [33mWARNING[0m - [system.py:31] - Tool not found: host
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:114] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.5-flash","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:201] - Initializing chat session...
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:232] - Chat initialized successfully in 2.866s
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:233] - Model: gemini-2.5-flash, Temperature: 0.3
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:234] - Provider: google
+2026-01-04 16:57:32 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 3)
+2026-01-04 16:57:34 - zuck_agent - DEBUG - [agent.py:326] - Received response in 2.277s (length: 1)
+2026-01-04 16:57:34 - zuck_agent - [31mERROR[0m - [agent.py:537] - Error parsing response: 'list' object has no attribute 'strip'

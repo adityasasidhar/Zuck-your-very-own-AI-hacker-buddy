@@ -1,3 +1,7 @@
+"""
+System information gathering.
+"""
+
 import platform
 import shutil
 import logging
@@ -6,7 +10,9 @@ from pydantic import BaseModel, Field
 
 logger = logging.getLogger('zuck_agent')
 
+
 class SystemInfo(BaseModel):
+    """System information for the agent context."""
     system: str
     node: str
     release: str
@@ -17,12 +23,24 @@ class SystemInfo(BaseModel):
     python_version: str = Field(default_factory=lambda: platform.python_version())
 
     @classmethod
-    def gather(cls, available_tools: List[str]) -> 'SystemInfo':
+    def gather(cls, allowed_tools: List[str]) -> 'SystemInfo':
+        """
+        Gather system information.
+        
+        Args:
+            allowed_tools: List of tools to check for availability
+            
+        Returns:
+            SystemInfo instance with gathered data
+        """
         # Shell builtins that don't have executable files
-        SHELL_BUILTINS = {'cd', 'echo', 'pwd', 'export', 'source', 'alias', 'bg', 'fg', 'jobs', 'history'}
+        SHELL_BUILTINS = {
+            'cd', 'echo', 'pwd', 'export', 'source', 
+            'alias', 'bg', 'fg', 'jobs', 'history'
+        }
         
         installed_tools = []
-        for tool in available_tools:
+        for tool in allowed_tools:
             if tool in SHELL_BUILTINS:
                 installed_tools.append(tool)
             elif shutil.which(tool):
@@ -39,6 +57,8 @@ class SystemInfo(BaseModel):
             processor=platform.processor(),
             available_tools=installed_tools
         )
+        
         logger.info(f"System info gathered: {info.system} {info.release}")
         logger.info(f"Available tools: {', '.join(installed_tools)}")
+        
         return info

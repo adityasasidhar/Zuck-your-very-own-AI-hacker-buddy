@@ -547,3 +547,130 @@ violations {
 }
 ]
 
+2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:86] - ================================================================================
+2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:87] - Initializing Zuck Agent
+2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:88] - Session ID: 20260101_143759
+2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:89] - ================================================================================
+2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:119] - Creating chat model for provider: google
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:184] - API key file not found: apikey.txt
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:195] - Failed to load API key: API key file not found: apikey.txt
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:176] - Failed to create chat model: API key file not found: apikey.txt
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:86] - ================================================================================
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:87] - Initializing Zuck Agent
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:88] - Session ID: 20260101_143854
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:89] - ================================================================================
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:119] - Creating chat model for provider: google
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:192] - Google API key loaded successfully
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:131] - Initialized Google Gemini: gemini-2.0-flash-exp
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:97] - Initialized 10 tools
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:102] - Tools bound to chat model
+2026-01-01 14:38:54 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-01 14:38:54 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-01 14:38:54 - zuck_agent - [33mWARNING[0m - [system.py:31] - Tool not found: host
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:113] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.0-flash-exp","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-01 14:38:54 - zuck_agent - [32mINFO[0m - [agent.py:200] - Initializing chat session...
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:86] - ================================================================================
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:87] - Initializing Zuck Agent
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:88] - Session ID: 20260104_165331
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:89] - ================================================================================
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:119] - Creating chat model for provider: google
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:192] - Google API key loaded successfully
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:131] - Initialized Google Gemini: gemini-2.0-flash-exp
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:97] - Initialized 10 tools
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:102] - Tools bound to chat model
+2026-01-04 16:53:31 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-04 16:53:31 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-04 16:53:31 - zuck_agent - WARNING - [system.py:31] - Tool not found: host
+2026-01-04 16:53:31 - zuck_agent - INFO - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-04 16:53:31 - zuck_agent - INFO - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:113] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.0-flash-exp","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-04 16:53:31 - zuck_agent - INFO - [agent.py:200] - Initializing chat session...
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:86] - ================================================================================
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:87] - Initializing Zuck Agent
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:88] - Session ID: 20260104_165506
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:89] - ================================================================================
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:119] - Creating chat model for provider: google
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:192] - Google API key loaded successfully
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:131] - Initialized Google Gemini: gemini-2.5-flash
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:97] - Initialized 10 tools
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:102] - Tools bound to chat model
+2026-01-04 16:55:06 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-04 16:55:06 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-04 16:55:06 - zuck_agent - WARNING - [system.py:31] - Tool not found: host
+2026-01-04 16:55:06 - zuck_agent - INFO - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-04 16:55:06 - zuck_agent - INFO - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:113] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.5-flash","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-04 16:55:06 - zuck_agent - INFO - [agent.py:200] - Initializing chat session...
+2026-01-04 16:55:09 - zuck_agent - INFO - [agent.py:231] - Chat initialized successfully in 2.765s
+2026-01-04 16:55:09 - zuck_agent - INFO - [agent.py:232] - Model: gemini-2.5-flash, Temperature: 0.3
+2026-01-04 16:55:09 - zuck_agent - INFO - [agent.py:233] - Provider: google
+2026-01-04 16:55:14 - zuck_agent - DEBUG - [agent.py:293] - Sending message (length: 5)
+2026-01-04 16:55:16 - zuck_agent - DEBUG - [agent.py:325] - Received response in 2.133s (length: 1)
+2026-01-04 16:55:16 - zuck_agent - ERROR - [agent.py:536] - Error parsing response: name 're' is not defined
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:87] - ================================================================================
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:88] - Initializing Zuck Agent
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:89] - Session ID: 20260104_165725
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:90] - ================================================================================
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:120] - Creating chat model for provider: google
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:193] - Google API key loaded successfully
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:132] - Initialized Google Gemini: gemini-2.5-flash
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:98] - Initialized 10 tools
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:103] - Tools bound to chat model
+2026-01-04 16:57:25 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-04 16:57:25 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-04 16:57:25 - zuck_agent - [33mWARNING[0m - [system.py:31] - Tool not found: host
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:114] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.5-flash","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-04 16:57:25 - zuck_agent - [32mINFO[0m - [agent.py:201] - Initializing chat session...
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:232] - Chat initialized successfully in 2.866s
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:233] - Model: gemini-2.5-flash, Temperature: 0.3
+2026-01-04 16:57:28 - zuck_agent - [32mINFO[0m - [agent.py:234] - Provider: google
+2026-01-04 16:57:32 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 3)
+2026-01-04 16:57:34 - zuck_agent - DEBUG - [agent.py:326] - Received response in 2.277s (length: 1)
+2026-01-04 16:57:34 - zuck_agent - [31mERROR[0m - [agent.py:537] - Error parsing response: 'list' object has no attribute 'strip'
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:87] - ================================================================================
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:88] - Initializing Zuck Agent
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:89] - Session ID: 20260104_165927
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:90] - ================================================================================
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:120] - Creating chat model for provider: google
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:193] - Google API key loaded successfully
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:132] - Initialized Google Gemini: gemini-2.5-flash
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:98] - Initialized 10 tools
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:103] - Tools bound to chat model
+2026-01-04 16:59:27 - zuck_agent - DEBUG - [security.py:71] - CommandValidator initialized
+2026-01-04 16:59:27 - zuck_agent - DEBUG - [execution.py:15] - CommandExecutor initialized
+2026-01-04 16:59:27 - zuck_agent - [33mWARNING[0m - [system.py:31] - Tool not found: host
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [system.py:42] - System info gathered: Linux 6.17.10+kali-amd64
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [system.py:43] - Available tools: nmap, tcpdump, nc, netcat, ls, cat, grep, find, ps, netstat, ss, ip, ifconfig, ping, curl, wget, echo, pwd, cd, mkdir, touch, head, tail, awk, sed, sort, uniq, wc, chmod, chown
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:114] - Configuration: {"max_commands":50,"command_timeout":60,"max_command_length":1000,"allowed_tools":["nmap","tcpdump","nc","netcat","host","ls","cat","grep","find","ps","netstat","ss","ip","ifconfig","ping","curl","wget","echo","pwd","cd","mkdir","touch","head","tail","awk","sed","sort","uniq","wc","chmod","chown"],"provider":"google","model_name":"gemini-2.5-flash","temperature":0.3,"api_key_file":"apikey.txt","openai_api_key":null,"anthropic_api_key":null,"log_directory":"logs","save_session_data":true}
+2026-01-04 16:59:27 - zuck_agent - [32mINFO[0m - [agent.py:201] - Initializing chat session...
+2026-01-04 16:59:30 - zuck_agent - [32mINFO[0m - [agent.py:232] - Chat initialized successfully in 2.874s
+2026-01-04 16:59:30 - zuck_agent - [32mINFO[0m - [agent.py:233] - Model: gemini-2.5-flash, Temperature: 0.3
+2026-01-04 16:59:30 - zuck_agent - [32mINFO[0m - [agent.py:234] - Provider: google
+2026-01-04 16:59:32 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 3)
+2026-01-04 16:59:33 - zuck_agent - DEBUG - [agent.py:337] - Received response in 1.776s (length: 223)
+2026-01-04 16:59:33 - zuck_agent - DEBUG - [agent.py:438] - Processing proposal: complete
+2026-01-04 16:59:33 - zuck_agent - [32mINFO[0m - [agent.py:441] - Task completed: Hello! How can I help you with your Pop!_OS Linux cybersecurity tasks today?
+2026-01-04 16:59:49 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 26)
+2026-01-04 16:59:51 - zuck_agent - DEBUG - [agent.py:337] - Received response in 2.375s (length: 375)
+2026-01-04 16:59:51 - zuck_agent - DEBUG - [agent.py:438] - Processing proposal: complete
+2026-01-04 16:59:51 - zuck_agent - [32mINFO[0m - [agent.py:441] - Task completed: My apologies! You are absolutely right, the system information indicates Kali Linux. Thank you for the correction. I am ready to assist you with your cybersecurity tasks on Kali Linux.
+2026-01-04 17:00:02 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 17)
+2026-01-04 17:00:05 - zuck_agent - DEBUG - [agent.py:337] - Received response in 2.768s (length: 747)
+2026-01-04 17:00:05 - zuck_agent - DEBUG - [agent.py:438] - Processing proposal: complete
+2026-01-04 17:00:05 - zuck_agent - [32mINFO[0m - [agent.py:441] - Task completed: As a cybersecurity assistant for Kali Linux, I can help you with a variety of tasks. I can perform network calculations, check file hashes, URLs, domains, and IPs for malware using VirusTotal, analyze timestamps and logs, store and retrieve findings, read configuration files and logs, make HTTP requests, query DNS records, get WHOIS information, execute Python code for data analysis, and search Wikipedia for security concepts. I can also assist with common Linux commands for system analysis and troubleshooting.
+2026-01-04 17:00:41 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 39)
+2026-01-04 17:00:44 - zuck_agent - DEBUG - [agent.py:337] - Received response in 2.857s (length: 792)
+2026-01-04 17:00:44 - zuck_agent - DEBUG - [agent.py:438] - Processing proposal: use_tool
+2026-01-04 17:00:44 - zuck_agent - [32mINFO[0m - [agent.py:461] - Executing tool from JSON: virustotal_lookup
+2026-01-04 17:00:44 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 86)
+2026-01-04 17:00:47 - zuck_agent - DEBUG - [agent.py:337] - Received response in 2.654s (length: 534)
+2026-01-04 17:01:43 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 4)
+2026-01-04 17:01:47 - zuck_agent - DEBUG - [agent.py:337] - Received response in 4.116s (length: 837)
+2026-01-04 17:01:47 - zuck_agent - DEBUG - [agent.py:438] - Processing proposal: use_tool
+2026-01-04 17:01:47 - zuck_agent - [32mINFO[0m - [agent.py:461] - Executing tool from JSON: calculator
+2026-01-04 17:01:47 - zuck_agent - DEBUG - [agent.py:294] - Sending message (length: 227)
+2026-01-04 17:01:49 - zuck_agent - DEBUG - [agent.py:337] - Received response in 2.454s (length: 384)

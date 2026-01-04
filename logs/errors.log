@@ -45,3 +45,8 @@ violations {
   seconds: 35
 }
 ]
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:184] - API key file not found: apikey.txt
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:195] - Failed to load API key: API key file not found: apikey.txt
+2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:176] - Failed to create chat model: API key file not found: apikey.txt
+2026-01-04 16:55:16 - zuck_agent - ERROR - [agent.py:536] - Error parsing response: name 're' is not defined
+2026-01-04 16:57:34 - zuck_agent - [31mERROR[0m - [agent.py:537] - Error parsing response: 'list' object has no attribute 'strip'

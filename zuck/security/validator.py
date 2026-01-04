@@ -1,59 +1,55 @@
+"""
+Command validation for security.
+"""
+
 import re
 import logging
 from datetime import datetime
 from typing import Optional, Tuple
-from models import CommandProposal, SecurityLevel, AgentAction
-from config import AgentConfig
+
+from zuck.core.models import CommandProposal, SecurityLevel, AgentAction
+from zuck.core.config import AgentConfig
+from zuck.security.patterns import CRITICAL_PATTERNS, HIGH_RISK_PATTERNS, MEDIUM_RISK_PATTERNS
 
 logger = logging.getLogger('zuck_agent')
 
+
 class SecurityValidator:
-    """Enhanced security validation"""
-
-    CRITICAL_PATTERNS = [
-        (r'\brm\s+(-[rf]+\s+)?/(?!tmp|var/tmp)', SecurityLevel.CRITICAL, "Recursive delete from root"),
-        (r'\bmkfs\b', SecurityLevel.CRITICAL, "Filesystem creation"),
-        (r'\bdd\s+if=/dev/(zero|random|urandom)\s+of=/dev/', SecurityLevel.CRITICAL, "Disk wipe"),
-        (r':\(\)\{.*\|\:.*\&\}\;', SecurityLevel.CRITICAL, "Fork bomb"),
-        (r'\bformat\b.*\b(disk|drive|partition)', SecurityLevel.CRITICAL, "Format disk"),
-    ]
-
-    HIGH_RISK_PATTERNS = [
-        (r'\bshutdown\b', SecurityLevel.HIGH, "System shutdown"),
-        (r'\breboot\b', SecurityLevel.HIGH, "System reboot"),
-        (r'\binit\s+[06]', SecurityLevel.HIGH, "System halt/reboot"),
-        (r'\bkillall\b', SecurityLevel.HIGH, "Kill all processes"),
-        (r'\biptables\s+-F', SecurityLevel.HIGH, "Flush firewall"),
-        (r'\bufw\s+disable', SecurityLevel.HIGH, "Disable firewall"),
-        (r'/dev/(sd[a-z]|nvme[0-9])', SecurityLevel.HIGH, "Direct device access"),
-    ]
-
-    MEDIUM_RISK_PATTERNS = [
-        (r'\bchmod\s+(-R\s+)?777', SecurityLevel.MEDIUM, "Insecure permissions"),
-        (r'\bchown\s+-R.*/', SecurityLevel.MEDIUM, "Recursive ownership change"),
-        (r'\bpkill\s+-9', SecurityLevel.MEDIUM, "Force kill processes"),
-    ]
+    """Enhanced security validation for commands."""
 
     @classmethod
     def analyze_command(cls, command: str) -> Tuple[bool, SecurityLevel, Optional[str]]:
+        """
+        Analyze a command for security risks.
+        
+        Args:
+            command: The command string to analyze
+            
+        Returns:
+            Tuple of (is_safe, risk_level, reason)
+        """
         command_lower = command.lower().strip()
 
         logger.debug(f"Analyzing command security: {command[:50]}...")
 
-        for pattern, level, desc in cls.CRITICAL_PATTERNS:
+        # Check critical patterns
+        for pattern, level, desc in CRITICAL_PATTERNS:
             if re.search(pattern, command_lower):
                 logger.critical(f"CRITICAL security issue detected: {desc}")
                 return False, level, f"CRITICAL: {desc}"
 
-        for pattern, level, desc in cls.HIGH_RISK_PATTERNS:
+        # Check high risk patterns
+        for pattern, level, desc in HIGH_RISK_PATTERNS:
             if re.search(pattern, command_lower):
                 logger.error(f"HIGH RISK command detected: {desc}")
                 return False, level, f"HIGH RISK: {desc}"
 
-        for pattern, level, desc in cls.MEDIUM_RISK_PATTERNS:
+        # Check medium risk patterns (warning only)
+        for pattern, level, desc in MEDIUM_RISK_PATTERNS:
             if re.search(pattern, command_lower):
                 logger.warning(f"Medium risk command: {desc}")
 
+        # Check for command chaining
         if any(sep in command for sep in [';', '&&', '||']):
             parts = re.split(r'[;&|]+', command)
             for part in parts:
@@ -66,11 +62,22 @@ class SecurityValidator:
 
 
 class CommandValidator:
+    """Validates commands before execution."""
+    
     def __init__(self, config: AgentConfig):
         self.config = config
         logger.debug("CommandValidator initialized")
 
     def validate(self, proposal: CommandProposal) -> Tuple[bool, Optional[str], SecurityLevel]:
+        """
+        Validate a command proposal.
+        
+        Args:
+            proposal: The command proposal to validate
+            
+        Returns:
+            Tuple of (is_valid, error_message, risk_level)
+        """
         start_time = datetime.now()
 
         if proposal.action != AgentAction.EXECUTE_COMMAND:
@@ -80,13 +87,16 @@ class CommandValidator:
 
         logger.debug(f"Validating command: {command}")
 
+        # Check for empty command
         if not command or not command.strip():
             return False, "Empty command", SecurityLevel.SAFE
 
+        # Check command length
         if len(command) > self.config.max_command_length:
             logger.warning(f"Command exceeds max length: {len(command)} > {self.config.max_command_length}")
             return False, f"Command exceeds max length ({self.config.max_command_length})", SecurityLevel.SAFE
 
+        # Security analysis
         is_safe, risk_level, reason = SecurityValidator.analyze_command(command)
 
         validation_time = (datetime.now() - start_time).total_seconds()
@@ -95,6 +105,7 @@ class CommandValidator:
         if not is_safe:
             return False, f"Security check failed [{risk_level}]: {reason}", risk_level
 
+        # Check if base command is in allowed tools
         base_cmd = command.split()[0].split('/')[-1]
         if base_cmd == 'sudo' and len(command.split()) > 1:
             base_cmd = command.split()[1].split('/')[-1]

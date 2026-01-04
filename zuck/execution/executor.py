@@ -1,20 +1,37 @@
+"""
+Command execution with safety and logging.
+"""
+
 import subprocess
 import logging
 import traceback
 from datetime import datetime
-from models import CommandProposal, CommandResult, CommandStatus
-from config import AgentConfig
-from tracking import PerformanceMetrics
+
+from zuck.core.models import CommandProposal, CommandResult, CommandStatus
+from zuck.core.config import AgentConfig
+from zuck.utils.tracking import PerformanceMetrics
 
 logger = logging.getLogger('zuck_agent')
 
+
 class CommandExecutor:
+    """Executes shell commands with safety measures."""
+    
     def __init__(self, config: AgentConfig, metrics: PerformanceMetrics):
         self.config = config
         self.metrics = metrics
         logger.debug("CommandExecutor initialized")
 
     def execute(self, proposal: CommandProposal) -> CommandResult:
+        """
+        Execute a validated command.
+        
+        Args:
+            proposal: The command proposal to execute
+            
+        Returns:
+            CommandResult with output and status
+        """
         start_time = datetime.now()
         command = proposal.command
 

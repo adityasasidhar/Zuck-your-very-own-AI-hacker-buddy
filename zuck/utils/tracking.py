@@ -1,13 +1,19 @@
+"""
+Token and performance tracking.
+"""
+
 from datetime import datetime
 from typing import List, Dict, Any
 from pydantic import BaseModel, Field, ConfigDict
 import logging
-from models import TokenUsage
+
+from zuck.core.models import TokenUsage
 
 logger = logging.getLogger('zuck_agent')
 
+
 class TokenTracker(BaseModel):
-    """Track token usage across session"""
+    """Track token usage across session."""
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     session_id: str
@@ -15,7 +21,7 @@ class TokenTracker(BaseModel):
     start_time: datetime = Field(default_factory=datetime.now)
 
     def add_usage(self, usage: TokenUsage):
-        """Add token usage record"""
+        """Add token usage record."""
         self.api_calls.append(usage)
         logger.debug(
             f"Token usage - Prompt: {usage.prompt_tokens}, "
@@ -47,7 +53,7 @@ class TokenTracker(BaseModel):
         return self.total_tokens / len(self.api_calls)
 
     def get_summary(self) -> Dict[str, Any]:
-        """Get usage summary"""
+        """Get usage summary."""
         return {
             "session_id": self.session_id,
             "total_api_calls": len(self.api_calls),
@@ -61,7 +67,7 @@ class TokenTracker(BaseModel):
 
 
 class PerformanceMetrics(BaseModel):
-    """Track performance metrics"""
+    """Track performance metrics."""
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     session_id: str
