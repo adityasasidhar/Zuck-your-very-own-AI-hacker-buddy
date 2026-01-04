@@ -107,6 +107,21 @@ def get_all_tools() -> List[Any]:
         get_attack_technique, search_techniques, get_owasp_info
     ])
     
+    # === Shell Execution ===
+    from zuck.tools.shell import (
+        shell_run, shell_run_background, shell_status,
+        shell_terminate, shell_list
+    )
+    
+    tools.extend([
+        shell_run, shell_run_background, shell_status,
+        shell_terminate, shell_list
+    ])
+    
+    # === Planning ===
+    from zuck.tools.planner import create_plan, update_plan_step, get_current_plan
+    tools.extend([create_plan, update_plan_step, get_current_plan])
+    
     logger.info(f"Loaded {len(tools)} tools")
     return tools
 

@@ -2,6 +2,7 @@
 Factory for creating LLM providers.
 """
 
+import os
 import logging
 from typing import TYPE_CHECKING
 
@@ -32,15 +33,15 @@ def create_provider(config: "AgentConfig") -> "BaseLLMProvider":
     if provider == "google":
         from zuck.llm.google import GoogleProvider
         return GoogleProvider(
-            model_name=config.model_name,
+            model_name=config.model_name or "gemini-2.5-flash",
             temperature=config.temperature,
-            api_key_file=config.api_key_file
+            api_key=config.google_api_key
         )
     
     elif provider == "openai":
         from zuck.llm.openai import OpenAIProvider
         return OpenAIProvider(
-            model_name=config.model_name,
+            model_name=config.model_name or "gpt-4",
             temperature=config.temperature,
             api_key=config.openai_api_key
         )
@@ -48,7 +49,7 @@ def create_provider(config: "AgentConfig") -> "BaseLLMProvider":
     elif provider == "anthropic":
         from zuck.llm.anthropic import AnthropicProvider
         return AnthropicProvider(
-            model_name=config.model_name,
+            model_name=config.model_name or "claude-3-sonnet-20240229",
             temperature=config.temperature,
             api_key=config.anthropic_api_key
         )
@@ -56,12 +57,20 @@ def create_provider(config: "AgentConfig") -> "BaseLLMProvider":
     elif provider == "ollama":
         from zuck.llm.ollama import OllamaProvider
         return OllamaProvider(
-            model_name=config.model_name,
+            model_name=config.model_name or "llama3",
             temperature=config.temperature
+        )
+    
+    elif provider == "groq":
+        from zuck.llm.groq import GroqProvider
+        return GroqProvider(
+            model_name=config.model_name or "llama-3.3-70b-versatile",
+            temperature=config.temperature,
+            api_key=config.groq_api_key
         )
     
     else:
         raise ValueError(
             f"Unsupported provider: {provider}. "
-            "Choose from: google, openai, anthropic, ollama"
+            "Choose from: google, openai, anthropic, ollama, groq"
         )

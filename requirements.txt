@@ -20,6 +20,7 @@ google-auth==2.41.1
 google-genai==1.45.0
 googleapis-common-protos==1.72.0
 greenlet==3.3.0
+groq==0.37.1
 grpcio==1.76.0
 grpcio-status==1.76.0
 h11==0.16.0
@@ -37,6 +38,7 @@ langchain-community==0.4.1
 langchain-core==1.2.6
 langchain-experimental==0.4.1
 langchain-google-genai==3.2.0
+langchain-groq==1.1.1
 langchain-openai==1.1.6
 langchain-text-splitters==1.1.0
 langgraph==1.0.5

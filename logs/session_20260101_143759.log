@@ -1,8 +1,0 @@
-2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:86] - ================================================================================
-2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:87] - Initializing Zuck Agent
-2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:88] - Session ID: 20260101_143759
-2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:89] - ================================================================================
-2026-01-01 14:37:59 - zuck_agent - [32mINFO[0m - [agent.py:119] - Creating chat model for provider: google
-2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:184] - API key file not found: apikey.txt
-2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:195] - Failed to load API key: API key file not found: apikey.txt
-2026-01-01 14:37:59 - zuck_agent - [35mCRITICAL[0m - [agent.py:176] - Failed to create chat model: API key file not found: apikey.txt

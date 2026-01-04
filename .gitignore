@@ -1,9 +1,19 @@
 .venv
-apikey.txt
-virustotalapikey.txt
-LANGCHAIN_GUIDE.md
 __pycache__/
 *__pycache__*
-test_langchain.py
 .idea
-.venv
+logs
+
+# Environment and secrets
+.env
+*.txt
+!requirements.txt
+
+# IDE
+*.pyc
+*.pyo
+.vscode/
+
+# Logs and sessions
+*.log
+sessions/

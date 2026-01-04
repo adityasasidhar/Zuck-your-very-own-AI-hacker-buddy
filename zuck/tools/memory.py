@@ -2,7 +2,9 @@
 Session memory storage tool.
 """
 
+import json
 import logging
+from typing import Optional
 
 from langchain.tools import tool
 from zuck.tools.registry import get_session_memory
@@ -11,54 +13,50 @@ logger = logging.getLogger('zuck_agent')
 
 
 @tool
-def memory_store(action: str, key: str = None, value: str = None) -> str:
+def memory_store(action: str, key: str = "", value: str = "") -> str:
     """
-    Store and retrieve findings during the session for context building.
+    Store and retrieve findings during the session.
     
     Args:
-        action: Action to perform - 'store', 'retrieve', 'list', 'clear'
-        key: Key for storage/retrieval
-        value: Value to store (for 'store' action)
+        action: Action - 'store', 'retrieve', 'list', or 'clear'
+        key: Key for storage/retrieval (required for store/retrieve)
+        value: Value to store (required for store, must be string)
         
     Returns:
-        Result of the memory operation
-        
-    Examples:
-        memory_store("store", "scan_result", "Found 5 open ports")
-        memory_store("retrieve", "scan_result")
-        memory_store("list")
+        Result of the operation
     """
     memory = get_session_memory()
     
     try:
         if action == "store":
-            if not key or value is None:
-                return "Error: Both key and value required for store action"
+            if not key or not value:
+                return "Error: Both key and value required for store"
+            # Convert to string if needed
+            if not isinstance(value, str):
+                value = json.dumps(value)
             memory[key] = value
-            return f"Stored: {key} = {value[:100]}..." if len(value) > 100 else f"Stored: {key} = {value}"
+            display = value[:100] + "..." if len(value) > 100 else value
+            return f"Stored: {key} = {display}"
         
         elif action == "retrieve":
             if not key:
-                return "Error: Key required for retrieve action"
+                return "Error: Key required for retrieve"
             if key in memory:
                 return f"{key}: {memory[key]}"
-            else:
-                return f"Key '{key}' not found in memory"
+            return f"Key '{key}' not found"
         
         elif action == "list":
             if not memory:
                 return "Memory is empty"
-            keys = list(memory.keys())
-            return f"Stored keys ({len(keys)}): {', '.join(keys)}"
+            return f"Keys ({len(memory)}): {', '.join(memory.keys())}"
         
         elif action == "clear":
             count = len(memory)
             memory.clear()
-            return f"Cleared {count} items from memory"
+            return f"Cleared {count} items"
         
         else:
-            return f"Error: Unknown action '{action}'. Use: store, retrieve, list, clear"
+            return f"Unknown action: {action}"
             
     except Exception as e:
-        logger.error(f"Memory tool error: {e}")
-        return f"Error: {str(e)}"
+        return f"Error: {e}"

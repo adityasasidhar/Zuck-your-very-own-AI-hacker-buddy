@@ -2,12 +2,12 @@
 Interactive REPL loop for the agent.
 """
 
+import os
+import json
 import traceback
 import logging
-from typing import Optional
 
-from zuck.core.session import SessionState
-from zuck.cli.display import Display
+from zuck.cli.display import Display, Colors
 
 logger = logging.getLogger('zuck_agent')
 
@@ -16,24 +16,26 @@ class REPL:
     """Interactive Read-Eval-Print Loop for the agent."""
     
     def __init__(self, agent):
-        """
-        Initialize the REPL.
-        
-        Args:
-            agent: ZuckAgent instance
-        """
+        """Initialize the REPL."""
         self.agent = agent
         self.session = agent.session
     
     def run(self):
         """Run the interactive REPL loop."""
-        Display.print_header(self.session.session_id)
+        # Clear screen and show banner
+        os.system('clear' if os.name != 'nt' else 'cls')
+        Display.print_banner()
+        Display.print_session_info(
+            self.session.session_id,
+            self.agent.config.model_name,
+            len(self.agent.tools)
+        )
         
-        # Initial greeting
+        # Initialize
         try:
             Display.print_connecting()
-            initial_response = self.agent.initialize()
-            Display.print_ready(initial_response)
+            self.agent.initialize()
+            Display.print_ready()
         except Exception as e:
             Display.print_error(f"Initialization failed: {e}")
             return
@@ -46,66 +48,45 @@ class REPL:
                 if not user_input:
                     continue
 
-                if user_input.lower() in ['quit', 'exit', 'bye']:
+                # Handle special commands
+                if user_input.lower() in ['quit', 'exit', 'bye', 'q']:
+                    print(f"\n{Colors.CYAN}Later, hacker. Stay safe. 👋{Colors.RESET}\n")
                     self.session.complete()
                     break
+                
+                if user_input.lower() == 'clear':
+                    os.system('clear' if os.name != 'nt' else 'cls')
+                    Display.print_banner()
+                    continue
+                
+                if user_input.lower() == 'help':
+                    Display.print_help()
+                    continue
+                
+                if user_input.lower() == 'tools':
+                    Display.print_tools_list(self.agent.tools)
+                    continue
 
-                self._process_input(user_input)
+                # Process with ReAct agent
+                Display.print_thinking()
+                response = self.agent.send_message(user_input)
+                
+                if response:
+                    Display.print_response(response)
+                else:
+                    Display.print_error("No response from agent")
 
             except KeyboardInterrupt:
-                print("\n\n⚠️ Session interrupted by user.")
-                self.session.complete()
-                break
+                print(f"\n{Colors.YELLOW}Interrupted. Type 'quit', 'exit', 'bye', 'q' to exit.{Colors.RESET}")
+                continue
             except Exception as e:
                 logger.critical(f"Critical error: {e}")
+                Display.print_error(str(e))
                 traceback.print_exc()
                 break
 
         # Print session summary
         self._print_summary()
-    
-    def _process_input(self, user_input: str):
-        """Process user input and generate response."""
-        Display.print_thinking()
-        response_text = self.agent.send_message(user_input)
-
-        if not response_text:
-            Display.print_error("Failed to get response from AI.")
-            return
-
-        try:
-            # Try to parse as JSON command proposal
-            proposal = self.agent.proposal_handler.parse_response(response_text)
-            
-            if proposal:
-                # If there's a message to the user in the JSON, print it
-                if proposal.message_to_user:
-                    Display.print_response(proposal.message_to_user)
-                
-                # If there's a plan, print it
-                if proposal.plan:
-                    Display.print_plan(proposal.plan)
-
-                result = self.agent.proposal_handler.process(proposal)
-
-                if result:
-                    self.session.add_result(result)
-
-                    # Feed result back to AI
-                    if result.command.startswith("tool:"):
-                        result_message = f"Tool execution result:\n{result.output}"
-                    else:
-                        result_message = f"Command execution result:\nStatus: {result.status}\nOutput:\n{result.output}"
-                        
-                    print("\n🤖 Analyzing result...")
-                    self.agent.send_message(result_message)
-            else:
-                # If not valid JSON, just print the text (conversational response)
-                Display.print_response(response_text)
-                
-        except Exception as e:
-            logger.error(f"Error in REPL loop: {e}")
-            Display.print_error(f"An error occurred: {e}")
     
     def _print_summary(self):
         """Print session summary."""

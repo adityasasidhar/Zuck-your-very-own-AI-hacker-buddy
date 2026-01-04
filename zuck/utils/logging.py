@@ -4,8 +4,35 @@ Logging setup with colors and file rotation.
 
 import logging
 import sys
+import warnings
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
+
+
+# Suppress noisy third-party loggers
+def suppress_noisy_loggers():
+    """Suppress verbose logs from langchain and other libraries."""
+    noisy_loggers = [
+        'httpx',
+        'httpcore',
+        'urllib3',
+        'requests',
+        'langchain',
+        'langchain_core',
+        'langchain_google_genai',
+        'langchain_openai',
+        'langchain_anthropic',
+        'langchain_community',
+        'google.api_core',
+        'google.auth',
+        'tenacity',
+    ]
+    
+    for logger_name in noisy_loggers:
+        logging.getLogger(logger_name).setLevel(logging.ERROR)
+    
+    # Suppress retry warnings
+    warnings.filterwarnings('ignore', message='.*Retrying.*')
 
 
 class LogFormatter(logging.Formatter):
@@ -27,6 +54,27 @@ class LogFormatter(logging.Formatter):
         return super().format(record)
 
 
+class CleanConsoleHandler(logging.StreamHandler):
+    """Console handler that filters out noisy messages."""
+    
+    NOISE_PATTERNS = [
+        'Retrying langchain',
+        'ResourceExhausted',
+        'rate_limit',
+        '429',
+        'quota',
+        'Failed to parse JSON',
+    ]
+    
+    def emit(self, record):
+        msg = record.getMessage()
+        # Skip noisy messages
+        for pattern in self.NOISE_PATTERNS:
+            if pattern.lower() in msg.lower():
+                return
+        super().emit(record)
+
+
 def setup_logging(session_id: str, log_dir: str = "logs") -> logging.Logger:
     """
     Setup comprehensive logging system.
@@ -38,6 +86,9 @@ def setup_logging(session_id: str, log_dir: str = "logs") -> logging.Logger:
     Returns:
         Configured logger instance
     """
+    # Suppress noisy loggers first
+    suppress_noisy_loggers()
+    
     # Create logs directory
     log_path = Path(log_dir)
     log_path.mkdir(exist_ok=True)
@@ -47,8 +98,8 @@ def setup_logging(session_id: str, log_dir: str = "logs") -> logging.Logger:
     logger.setLevel(logging.DEBUG)
     logger.handlers.clear()
 
-    # Console handler (INFO and above)
-    console_handler = logging.StreamHandler(sys.stdout)
+    # Console handler (INFO and above) - uses clean handler
+    console_handler = CleanConsoleHandler(sys.stdout)
     console_handler.setLevel(logging.INFO)
     console_format = LogFormatter(
         '%(asctime)s - %(levelname)s - %(message)s',

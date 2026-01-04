@@ -1,6 +1,0 @@
-2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:587] - ================================================================================
-2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:588] - Initializing Zuck Agent
-2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:589] - Session ID: 20251018_214823
-2025-10-18 21:48:23 - zuck_agent - INFO - [main.py:590] - ================================================================================
-2025-10-18 21:48:23 - zuck_agent - CRITICAL - [main.py:609] - API key file not found: apikey.txt
-2025-10-18 21:48:23 - zuck_agent - CRITICAL - [main.py:620] - Failed to load API key: API key file not found: apikey.txt

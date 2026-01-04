@@ -2,10 +2,11 @@
 VirusTotal lookup tool.
 """
 
+import os
 import re
 import json
 import logging
-from pathlib import Path
+import base64
 
 import requests
 from langchain.tools import tool
@@ -16,33 +17,20 @@ logger = logging.getLogger('zuck_agent')
 @tool
 def virustotal_lookup(resource: str, resource_type: str = "auto") -> str:
     """
-    Check file hash, URL, domain, or IP reputation using VirusTotal API.
+    Check file hash, URL, domain, or IP reputation using VirusTotal.
     
     Args:
-        resource: The resource to check (hash, URL, domain, or IP)
-        resource_type: Type of resource - 'hash', 'url', 'domain', 'ip', or 'auto' (default)
-        
-    Returns:
-        Reputation analysis from VirusTotal
-        
-    Examples:
-        virustotal_lookup("44d88612fea8a8f36de82e1278abb02f", "hash")
-        virustotal_lookup("example.com", "domain")
-        virustotal_lookup("8.8.8.8", "ip")
+        resource: Hash, URL, domain, or IP to check
+        resource_type: Type - 'hash', 'url', 'domain', 'ip', or 'auto'
     """
     try:
-        # Load API key
-        api_key_file = Path("virustotalapikey.txt")
-        if not api_key_file.exists():
-            return "Error: VirusTotal API key file not found (virustotalapikey.txt)"
-        
-        api_key = api_key_file.read_text().strip()
+        api_key = os.getenv("VIRUSTOTAL_API_KEY")
         if not api_key:
-            return "Error: VirusTotal API key is empty"
+            return "Error: VIRUSTOTAL_API_KEY not set in .env file"
         
         headers = {"x-apikey": api_key}
         
-        # Auto-detect resource type
+        # Auto-detect type
         if resource_type == "auto":
             if re.match(r'^[a-fA-F0-9]{32,64}$', resource):
                 resource_type = "hash"
@@ -53,11 +41,10 @@ def virustotal_lookup(resource: str, resource_type: str = "auto") -> str:
             else:
                 resource_type = "domain"
         
-        # Make API request based on type
+        # Build URL
         if resource_type == "hash":
             url = f"https://www.virustotal.com/api/v3/files/{resource}"
         elif resource_type == "url":
-            import base64
             url_id = base64.urlsafe_b64encode(resource.encode()).decode().strip("=")
             url = f"https://www.virustotal.com/api/v3/urls/{url_id}"
         elif resource_type == "domain":
@@ -65,19 +52,18 @@ def virustotal_lookup(resource: str, resource_type: str = "auto") -> str:
         elif resource_type == "ip":
             url = f"https://www.virustotal.com/api/v3/ip_addresses/{resource}"
         else:
-            return f"Error: Unknown resource type '{resource_type}'"
+            return f"Error: Unknown type '{resource_type}'"
         
         response = requests.get(url, headers=headers, timeout=10)
         
         if response.status_code == 404:
-            return f"Resource not found in VirusTotal database: {resource}"
+            return f"Not found in VirusTotal: {resource}"
         
         response.raise_for_status()
         data = response.json()
         
-        # Extract relevant information
-        attributes = data.get('data', {}).get('attributes', {})
-        stats = attributes.get('last_analysis_stats', {})
+        attrs = data.get('data', {}).get('attributes', {})
+        stats = attrs.get('last_analysis_stats', {})
         
         result = {
             "resource": resource,
@@ -85,16 +71,10 @@ def virustotal_lookup(resource: str, resource_type: str = "auto") -> str:
             "malicious": stats.get('malicious', 0),
             "suspicious": stats.get('suspicious', 0),
             "harmless": stats.get('harmless', 0),
-            "undetected": stats.get('undetected', 0),
-            "reputation": attributes.get('reputation', 'N/A'),
-            "last_analysis_date": attributes.get('last_analysis_date', 'N/A')
+            "reputation": attrs.get('reputation', 'N/A')
         }
         
         return json.dumps(result, indent=2)
         
     except requests.exceptions.RequestException as e:
-        logger.error(f"VirusTotal API error: {e}")
-        return f"Error querying VirusTotal: {str(e)}"
-    except Exception as e:
-        logger.error(f"VirusTotal error: {e}")
-        return f"Error: {str(e)}"
+        return f"Error: {e}"
