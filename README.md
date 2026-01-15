@@ -4,8 +4,11 @@ A comprehensive, modular AI-powered cybersecurity assistant with **49 built-in t
 
 ## Features
 
-- **49 Security Tools**: OSINT, offensive, defensive, forensics, playbooks
-- **Multi-Provider LLM**: Google Gemini, OpenAI, Anthropic, Ollama
+- **57 Security Tools**: OSINT, offensive, defensive, forensics, playbooks, shell execution
+- **Agent Orchestration**: Stateful planning engine with progress tracking
+- **Multi-Provider LLM**: Google Gemini, OpenAI, Anthropic, Groq (Llama 4)
+- **ReAct Loop**: Automatic tool chaining with retry and error recovery
+- **Shell Execution**: Secure terminal access with allowlists
 - **Automated Playbooks**: Recon, web pentest, incident response
 - **Knowledge Base**: MITRE ATT&CK, OWASP Top 10 references
 - **Modular Architecture**: Easy to extend with new tools
@@ -817,7 +820,78 @@ port_scan("example.com", "22,80,443,3389")
 
 ---
 
+## Agent Orchestration & Reliability
+
+Zuck implements a robust agentic architecture designed for complex, multi-step cybersecurity operations.
+
+### ReAct Loop Execution
+The agent uses a **Reason-Act-Observe** loop with automatic tool chaining:
+- Maximum 10 iterations per request
+- Automatic retry with exponential backoff on rate limits
+- Graceful error handling and recovery
+
+### Stateful Planning Engine
+
+#### `create_plan`
+Create a structured execution plan stored in session memory.
+
+```python
+create_plan(["Enumerate subdomains", "Scan ports", "Check CVEs", "Generate report"])
+```
+
+#### `update_plan_step`
+Track progress as steps complete.
+
+```python
+update_plan_step(1, "done", "Found 47 subdomains")
+update_plan_step(2, "in_progress")
+```
+
+#### `get_current_plan`
+Recall the current mission state at any time.
+
+### Shell Execution
+
+Full terminal access with security controls:
+
+| Tool | Purpose |
+|------|---------|
+| `shell_run` | Execute command synchronously (60s timeout) |
+| `shell_run_background` | Async execution for long-running jobs |
+| `shell_status` | Check background job status |
+| `shell_terminate` | Kill running jobs |
+| `shell_list` | List all tracked commands |
+
+**Security**: Commands are validated against an allowlist (nmap, curl, grep, etc.) and blocked patterns (rm -rf, etc.).
+
+### Multi-Provider LLM Support
+
+| Provider | Models | Notes |
+|----------|--------|-------|
+| **Groq** | Llama 4 Scout, GPT-OSS-120B | Fast inference (~750 tok/s) |
+| **Google** | Gemini 2.5 Flash | Default provider |
+| **OpenAI** | GPT-4o, GPT-4 Turbo | Full tool calling |
+| **Anthropic** | Claude 3.5 Sonnet | Strong reasoning |
+
+```bash
+python main.py --provider groq --model meta-llama/llama-4-scout-17b-16e-instruct
+```
+
+### Configuration via Environment
+
+All secrets managed via `.env` file:
+
+```env
+GROQ_API_KEY=gsk_xxx
+GOOGLE_API_KEY=AIza...
+SHODAN_API_KEY=xxx
+VIRUSTOTAL_API_KEY=xxx
+```
+
+---
+
 ## API Keys
+
 
 | Service | File | Required For |
 |---------|------|--------------|
