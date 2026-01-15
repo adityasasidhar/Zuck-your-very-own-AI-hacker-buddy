@@ -13,6 +13,15 @@ A comprehensive, modular AI-powered cybersecurity assistant with **49 built-in t
 - **Knowledge Base**: MITRE ATT&CK, OWASP Top 10 references
 - **Modular Architecture**: Easy to extend with new tools
 
+## Reliability Statement
+
+| Problem | Solution | Impact |
+|---------|----------|--------|
+| **Unstructured execution** - Agent called tools randomly | Implemented **stateful planning engine** with `create_plan`, checkpoints, and progress tracking | Predictable, auditable multi-step operations |
+| **Runaway loops** - Agent could spin forever | Bounded **ReAct loop** to max 10 iterations | Guaranteed termination |
+| **No shell access** - Limited to Python tools only | Added **secure shell execution** with command allowlists and pattern blocking | Full terminal power with safety guardrails |
+| **Type validation errors** - Tool calls failed | **Robust parameter handling** with type coercion and defaults | Higher tool execution success rate |
+
 ## Quick Start
 
 ```bash
