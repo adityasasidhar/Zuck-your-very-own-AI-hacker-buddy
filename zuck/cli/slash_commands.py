@@ -125,16 +125,13 @@ class SlashCommands:
         
         # OpenAI
         table.add_row("openai", "gpt-5.2", "Most proficient model series")
-        table.add_row("", "gpt-5.2-instant", "Fast writing and retrieval")
-        table.add_row("", "gpt-5.2-thinking", "Structured tasks, planning")
-        table.add_row("", "gpt-5.2-pro", "Most accurate for complex tasks")
-        table.add_row("", "gpt-4-turbo", "Faster GPT-4")
+        table.add_row("", "gpt-5-nano", "Fast writing and retrieval")
+        table.add_row("", "gpt-5-mini", "Most accurate for complex tasks")
         
         # Anthropic Claude
         table.add_row("anthropic", "claude-4.5-opus", "Most intelligent, deep reasoning")
         table.add_row("", "claude-4.5-sonnet", "Balanced capability (recommended)")
         table.add_row("", "claude-4.5-haiku", "Fastest Claude model")
-        table.add_row("", "claude-4-opus", "Previous generation capable")
         
         # Groq
         table.add_row("groq", "compound", "AI system with web search & code execution")
@@ -143,12 +140,6 @@ class SlashCommands:
         table.add_row("", "llama-4-scout-17b-16e-instruct", "Fast, good tools")
         table.add_row("", "llama-4-maverick-17b-128e-instruct", "Enhanced version")
         table.add_row("", "llama-3.3-70b-versatile", "Classic Llama")
-        table.add_row("", "llama-3.1-8b-instant", "Fast and efficient")
-        table.add_row("", "deepseek-r1-distill-llama-70b", "Reasoning model")
-        table.add_row("", "qwen3-32b", "Qwen latest generation")
-        table.add_row("", "qwq-32b", "Reasoning-focused Qwen")
-        table.add_row("", "mistral-saba-24b", "Mistral latest")
-        table.add_row("", "gemma2-9b-it", "Google Gemma 2")
         table.add_row("", "kimi-k2-instruct", "MoE with 131K context")
         
         # Ollama

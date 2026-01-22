@@ -1,26 +1,25 @@
 """
-Factory for creating LLM providers.
+Factory for creating LangChain Chat Models.
 """
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from zuck.core.config import AgentConfig
-    from zuck.llm.base import BaseLLMProvider
 
 logger = logging.getLogger('zuck_agent')
 
 
-def create_provider(config: "AgentConfig") -> "BaseLLMProvider":
+def create_provider(config: "AgentConfig") -> Any:
     """
-    Factory method to create the appropriate LLM provider based on configuration.
+    Factory method to create the appropriate LangChain Chat Model based on configuration.
     
     Args:
         config: AgentConfig with provider settings
         
     Returns:
-        Configured LLM provider instance
+        Configured LangChain Chat Model instance (e.g. ChatOpenAI, ChatGoogleGenerativeAI)
         
     Raises:
         ValueError: If provider is not supported
@@ -30,40 +29,59 @@ def create_provider(config: "AgentConfig") -> "BaseLLMProvider":
     logger.info(f"Creating LLM provider: {provider}")
     
     if provider == "google":
-        from zuck.llm.google import GoogleProvider
-        return GoogleProvider(
-            model_name=config.model_name or "gemini-2.5-flash",
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        
+        if not config.google_api_key:
+             raise ValueError("GOOGLE_API_KEY not set")
+
+        return ChatGoogleGenerativeAI(
+            model=config.model_name or "gemini-2.5-flash",
             temperature=config.temperature,
-            api_key=config.google_api_key
+            google_api_key=config.google_api_key,
         )
     
     elif provider == "openai":
-        from zuck.llm.openai import OpenAIProvider
-        return OpenAIProvider(
-            model_name=config.model_name or "gpt-4",
+        from langchain_openai import ChatOpenAI
+        
+        if not config.openai_api_key:
+            raise ValueError("OPENAI_API_KEY not set")
+
+        return ChatOpenAI(
+            model=config.model_name or "gpt-4",
             temperature=config.temperature,
-            api_key=config.openai_api_key
+            api_key=config.openai_api_key,
         )
     
     elif provider == "anthropic":
-        from zuck.llm.anthropic import AnthropicProvider
-        return AnthropicProvider(
-            model_name=config.model_name or "claude-3-sonnet-20240229",
+        from langchain_anthropic import ChatAnthropic
+        
+        if not config.anthropic_api_key:
+            raise ValueError("ANTHROPIC_API_KEY not set")
+
+        return ChatAnthropic(
+            model=config.model_name or "claude-3-sonnet-20240229",
             temperature=config.temperature,
-            api_key=config.anthropic_api_key
+            api_key=config.anthropic_api_key,
         )
     
     elif provider == "ollama":
-        from zuck.llm.ollama import OllamaProvider
-        return OllamaProvider(
-            model_name=config.model_name or "llama3",
-            temperature=config.temperature
+        from langchain_ollama import ChatOllama
+        
+        base_url = config.ollama_base_url or "http://localhost:11434"
+        return ChatOllama(
+            model=config.model_name or "llama3",
+            temperature=config.temperature,
+            base_url=base_url
         )
     
     elif provider == "groq":
-        from zuck.llm.groq import GroqProvider
-        return GroqProvider(
-            model_name=config.model_name or "llama-3.3-70b-versatile",
+        from langchain_groq import ChatGroq
+        
+        if not config.groq_api_key:
+            raise ValueError("GROQ_API_KEY not set")
+            
+        return ChatGroq(
+            model=config.model_name or "llama-3.3-70b-versatile",
             temperature=config.temperature,
             api_key=config.groq_api_key
         )

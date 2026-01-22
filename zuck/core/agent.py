@@ -179,12 +179,7 @@ You are Zuck. You have full shell access. Execute with precision."""
         self.tools = get_all_tools()
         logger.info(f"Initialized {len(self.tools)} tools")
         
-        # Bind tools to provider
-        try:
-            self.provider.bind_tools(self.tools)
-            logger.info("Tools bound to LLM provider")
-        except Exception as e:
-            logger.warning(f"Could not bind tools: {e}")
+        # Tools are bound by the Deep Agent automatically later
 
         # Initialize tracking
         self.token_tracker = TokenTracker(session_id=self.session.session_id)
@@ -239,15 +234,9 @@ You are Zuck. You have full shell access. Execute with precision."""
             self.chat_history = [SystemMessage(content=context_message)]
 
             # Initialize Deep Agent
-            # Ensure we have the underlying LangChain model
-            if not hasattr(self.provider, "model") or not self.provider.model:
-                 logger.warning("Provider provider does not expose 'model' attribute required for Deep Agents. Attempting to use provider wrapper directly (may fail).")
-                 model_to_use = self.provider
-            else:
-                 model_to_use = self.provider.model
-
+            # self.provider is now a LangChain model instance from our new factory
             self.agent = create_deep_agent(
-                model=model_to_use,
+                model=self.provider,
                 tools=self.tools,
                 system_prompt=context_message
             )
