@@ -2,16 +2,12 @@
 Display utilities for the CLI using Rich.
 """
 
-import sys
-import time
-from typing import Optional, List, Any
+from typing import List, Any
+
 from rich.console import Console
 from rich.markdown import Markdown
-from rich.panel import Panel
-from rich.prompt import Prompt
-from rich.theme import Theme
-from rich.status import Status
 from rich.table import Table
+from rich.theme import Theme
 
 # Custom theme
 zuck_theme = Theme({

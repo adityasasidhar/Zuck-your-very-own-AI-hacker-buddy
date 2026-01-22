@@ -4,8 +4,9 @@ Agent configuration using .env file.
 
 import os
 from typing import Optional, List
-from pydantic import BaseModel
+
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 # Load .env file
 load_dotenv()

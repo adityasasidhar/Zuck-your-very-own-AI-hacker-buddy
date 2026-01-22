@@ -2,8 +2,8 @@
 Groq LLM provider - Fast inference with open models.
 """
 
-import os
 import logging
+import os
 from typing import List, Any, Optional
 
 from zuck.llm.base import BaseLLMProvider

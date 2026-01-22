@@ -3,8 +3,8 @@ Abstract base class for LLM providers.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Any, Optional, Dict
 from dataclasses import dataclass
+from typing import List, Any, Optional, Dict
 
 
 @dataclass

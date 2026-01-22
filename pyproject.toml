@@ -12,6 +12,7 @@ dependencies = [
     "langchain-experimental>=0.4.1",
     "langchain-google-genai>=4.2.0",
     "langchain-openai>=1.1.7",
+    "deepagents>=0.1.0",
     "rich>=14.2.0",
     "wikipedia>=1.4.0",
 ]

@@ -177,6 +177,15 @@ wheels = [
 ]
 
 [[package]]
+name = "bracex"
+version = "2.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/63/9a/fec38644694abfaaeca2798b58e276a8e61de49e2e37494ace423395febc/bracex-2.6.tar.gz", hash = "sha256:98f1347cd77e22ee8d967a30ad4e310b233f7754dbf31ff3fceb76145ba47dc7", size = 26642, upload-time = "2025-06-22T19:12:31.254Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9d/2a/9186535ce58db529927f6cf5990a849aa9e052eea3e2cfefe20b9e1802da/bracex-2.6-py3-none-any.whl", hash = "sha256:0b0049264e7340b3ec782b5cb99beb325f36c3782a32e36e876452fd49a09952", size = 11508, upload-time = "2025-06-22T19:12:29.781Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2026.1.4"
 source = { registry = "https://pypi.org/simple" }
@@ -262,6 +271,22 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/64/a4/f71d9cf3a5ac257c993b5ca3f93df5f7fb395c725e7f1e6479d2514173c3/dataclasses_json-0.6.7.tar.gz", hash = "sha256:b6b3e528266ea45b9535223bc53ca645f5208833c29229e847b3f26a1cc55fc0", size = 32227, upload-time = "2024-06-09T16:20:19.103Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c3/be/d0d44e092656fe7a06b55e6103cbce807cdbdee17884a5367c68c9860853/dataclasses_json-0.6.7-py3-none-any.whl", hash = "sha256:0dbf33f26c8d5305befd61b39d2b3414e8a407bedc2834dea9b8d642666fb40a", size = 28686, upload-time = "2024-06-09T16:20:16.715Z" },
+]
+
+[[package]]
+name = "deepagents"
+version = "0.3.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain" },
+    { name = "langchain-anthropic" },
+    { name = "langchain-core" },
+    { name = "langchain-google-genai" },
+    { name = "wcmatch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/81/2ada9232cf2917ebb6b0c200de7f51540f63a2f817162ebe75b90bbe81f4/deepagents-0.3.7.tar.gz", hash = "sha256:7cdfdeb07e7dbbcef231ed1c80f532660a0982f139ae65a6deae7ed738316b65", size = 73429, upload-time = "2026-01-21T23:15:23.463Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/28/b0/413d89c6d1511236d66857dea65e663dc52c5fab540859069e08a5eaaf2e/deepagents-0.3.7-py3-none-any.whl", hash = "sha256:4e2cdac6b47349177f29a1fbb1c2ffec84bf14bc6e0f52d834bf18f61022ece7", size = 78631, upload-time = "2026-01-21T23:15:22.265Z" },
 ]
 
 [[package]]
@@ -1772,6 +1797,18 @@ wheels = [
 ]
 
 [[package]]
+name = "wcmatch"
+version = "10.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bracex" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/79/3e/c0bdc27cf06f4e47680bd5803a07cb3dfd17de84cde92dd217dcb9e05253/wcmatch-10.1.tar.gz", hash = "sha256:f11f94208c8c8484a16f4f48638a85d771d9513f4ab3f37595978801cb9465af", size = 117421, upload-time = "2025-06-22T19:14:02.49Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/eb/d8/0d1d2e9d3fabcf5d6840362adcf05f8cf3cd06a73358140c3a97189238ae/wcmatch-10.1-py3-none-any.whl", hash = "sha256:5848ace7dbb0476e5e55ab63c6bbd529745089343427caa5537f230cc01beb8a", size = 39854, upload-time = "2025-06-22T19:14:00.978Z" },
+]
+
+[[package]]
 name = "websockets"
 version = "15.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2051,6 +2088,7 @@ name = "zuck-your-very-own-ai-hacker-buddy"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "deepagents" },
     { name = "dotenv" },
     { name = "groq" },
     { name = "langchain" },
@@ -2065,6 +2103,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "deepagents", specifier = ">=0.1.0" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "groq", specifier = ">=1.0.0" },
     { name = "langchain", specifier = ">=1.2.6" },

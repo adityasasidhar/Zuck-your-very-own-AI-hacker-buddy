@@ -2,10 +2,10 @@
 ShellManager - Manages multiple shell sessions.
 """
 
-import uuid
 import logging
-from typing import Dict, Optional, List
+import uuid
 from datetime import datetime
+from typing import Dict, Optional, List
 
 from zuck.shell.session import ShellSession
 

@@ -5,8 +5,8 @@ Logging setup with colors and file rotation.
 import logging
 import sys
 import warnings
-from pathlib import Path
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 
 # Suppress noisy third-party loggers

@@ -1,9 +1,6 @@
-"""
-Session state management for the agent.
-"""
-
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+
 from pydantic import BaseModel, Field, ConfigDict
 
 from zuck.core.models import CommandResult, CommandStatus

@@ -2,10 +2,11 @@
 System information gathering.
 """
 
+import logging
 import platform
 import shutil
-import logging
 from typing import List
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger('zuck_agent')

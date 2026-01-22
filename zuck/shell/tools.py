@@ -5,6 +5,7 @@ Shell tools - LangChain tools for agent shell access.
 import json
 import logging
 from typing import Optional
+
 from langchain.tools import tool
 
 from zuck.shell.manager import ShellManager

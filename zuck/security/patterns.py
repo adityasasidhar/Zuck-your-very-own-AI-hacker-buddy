@@ -1,7 +1,3 @@
-"""
-Security patterns for command validation.
-"""
-
 from zuck.core.models import SecurityLevel
 
 # Critical patterns - commands that should NEVER be executed

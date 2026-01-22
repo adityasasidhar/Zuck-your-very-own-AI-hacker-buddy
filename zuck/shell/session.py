@@ -2,12 +2,12 @@
 ShellSession - PTY-based interactive shell session.
 """
 
+import logging
 import os
 import pty
 import select
 import signal
 import subprocess
-import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime

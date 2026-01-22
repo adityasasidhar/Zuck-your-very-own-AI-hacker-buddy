@@ -4,9 +4,10 @@ Maintains state in session memory.
 """
 
 import logging
-import json
-from typing import List, Optional
+from typing import List
+
 from langchain.tools import tool
+
 from zuck.tools.registry import get_session_memory
 
 logger = logging.getLogger('zuck_agent')

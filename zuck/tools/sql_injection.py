@@ -4,7 +4,7 @@ SQL injection testing helper.
 
 import json
 import logging
-from urllib.parse import urlparse, parse_qs, urlencode
+
 from langchain.tools import tool
 
 logger = logging.getLogger('zuck_agent')

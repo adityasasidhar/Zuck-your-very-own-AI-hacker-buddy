@@ -2,14 +2,12 @@
 Command validation for security.
 """
 
-import re
 import logging
 from datetime import datetime
 from typing import Optional, Tuple
 
-from zuck.core.models import CommandProposal, SecurityLevel, AgentAction
 from zuck.core.config import AgentConfig
-from zuck.security.patterns import CRITICAL_PATTERNS, HIGH_RISK_PATTERNS, MEDIUM_RISK_PATTERNS
+from zuck.core.models import CommandProposal, SecurityLevel, AgentAction
 
 logger = logging.getLogger('zuck_agent')
 

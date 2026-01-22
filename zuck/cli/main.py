@@ -5,8 +5,8 @@ CLI entry point with argument parsing.
 import argparse
 import sys
 
-from zuck.core.config import AgentConfig
 from zuck.core.agent import ZuckAgent
+from zuck.core.config import AgentConfig
 
 # Default models per provider
 DEFAULT_MODELS = {

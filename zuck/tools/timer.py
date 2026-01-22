@@ -5,7 +5,9 @@ resumes automatically once the timer completes.
 """
 
 import time
+
 from langchain.tools import tool
+
 
 @tool
 def wait_timer(seconds: int, reason: str = "") -> str:

@@ -4,8 +4,6 @@ Slash command handler for interactive REPL.
 
 from rich.console import Console
 from rich.table import Table
-from rich.panel import Panel
-from typing import Optional
 
 console = Console()
 

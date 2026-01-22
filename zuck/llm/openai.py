@@ -2,8 +2,8 @@
 OpenAI LLM provider.
 """
 
-import os
 import logging
+import os
 from typing import List, Any, Optional, Dict
 
 from langchain_openai import ChatOpenAI

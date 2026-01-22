@@ -1,11 +1,6 @@
-"""
-Interactive REPL loop for the agent.
-"""
-
-import os
-import json
-import traceback
 import logging
+import os
+import traceback
 
 from zuck.cli.display import Display, Colors
 from zuck.cli.slash_commands import SlashCommands

@@ -2,10 +2,11 @@
 Token and performance tracking.
 """
 
+import logging
 from datetime import datetime
 from typing import List, Dict, Any
+
 from pydantic import BaseModel, Field, ConfigDict
-import logging
 
 from zuck.core.models import TokenUsage
 

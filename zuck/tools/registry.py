@@ -2,8 +2,8 @@
 Tool registry - Central place to manage all available tools.
 """
 
-from typing import List, Optional, Any
 import logging
+from typing import List, Optional, Any
 
 logger = logging.getLogger('zuck_agent')
 

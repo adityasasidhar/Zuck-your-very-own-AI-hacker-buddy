@@ -2,21 +2,18 @@
 Main ZuckAgent class - orchestrates all components.
 """
 
-import json
-import time
 import logging
 import traceback
 from datetime import datetime
 from typing import List, Optional, Union
 
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, ToolMessage
+from deepagents import create_deep_agent
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 from zuck.core.config import AgentConfig
-from zuck.core.models import TokenUsage
 from zuck.core.session import SessionState
 from zuck.llm import create_provider
 from zuck.tools import get_all_tools
-from zuck.execution import ProposalHandler
 from zuck.utils import setup_logging, SystemInfo
 from zuck.utils.tracking import TokenTracker, PerformanceMetrics
 
@@ -193,9 +190,6 @@ You are Zuck. You have full shell access. Execute with precision."""
         self.token_tracker = TokenTracker(session_id=self.session.session_id)
         self.metrics = PerformanceMetrics(session_id=self.session.session_id)
 
-        # Initialize proposal handler
-        self.proposal_handler = ProposalHandler(config, self.metrics, self.tools)
-
         # Gather system info
         self.system_info = SystemInfo.gather(config.allowed_tools)
 
@@ -244,6 +238,21 @@ You are Zuck. You have full shell access. Execute with precision."""
             # Initialize chat history with system message only
             self.chat_history = [SystemMessage(content=context_message)]
 
+            # Initialize Deep Agent
+            # Ensure we have the underlying LangChain model
+            if not hasattr(self.provider, "model") or not self.provider.model:
+                 logger.warning("Provider provider does not expose 'model' attribute required for Deep Agents. Attempting to use provider wrapper directly (may fail).")
+                 model_to_use = self.provider
+            else:
+                 model_to_use = self.provider.model
+
+            self.agent = create_deep_agent(
+                model=model_to_use,
+                tools=self.tools,
+                system_prompt=context_message
+            )
+            logger.info("Deep Agent initialized successfully")
+
             start_time = datetime.now()
             api_time = (datetime.now() - start_time).total_seconds()
 
@@ -258,199 +267,38 @@ You are Zuck. You have full shell access. Execute with precision."""
             logger.debug(traceback.format_exc())
             raise
 
-    def _track_token_usage(self, response):
-        """Track token usage from provider response."""
-        try:
-            if response.usage_metadata:
-                usage = TokenUsage(
-                    prompt_tokens=response.usage_metadata.get('prompt_tokens', 0),
-                    completion_tokens=response.usage_metadata.get('completion_tokens', 0),
-                    total_tokens=response.usage_metadata.get('total_tokens', 0),
-                    model=self.config.model_name
-                )
-                self.token_tracker.add_usage(usage)
-        except Exception as e:
-            logger.warning(f"Failed to track token usage: {e}")
-
     def send_message(self, message: str, max_iterations: int = 10) -> Optional[str]:
         """
-        Send a message and run ReAct loop - chains multiple tool calls automatically.
-        
-        Args:
-            message: User message to send
-            max_iterations: Maximum tool call iterations (default: 10)
-            
-        Returns:
-            Final LLM response text or None on error
+        Send a message using LangChain Deep Agents.
         """
-        max_retries = 3
-        base_delay = 2
-        
-        for attempt in range(max_retries + 1):
-            try:
-                logger.debug(f"Sending message (length: {len(message)})")
+        try:
+            logger.debug(f"Sending message (length: {len(message)})")
 
-                # Add user message to history
-                self.chat_history.append(HumanMessage(content=message))
+            # Add user message to history (for local tracking, though agent handles its own state if using thread_id)
+            # For now we pass full history to agent invoke to be safe/stateless-compatible
+            self.chat_history.append(HumanMessage(content=message))
 
-                # Track tool outputs for final display
-                execution_trace = []
-
-                # ReAct loop - keep going until no more tool calls
-                iteration = 0
-                while iteration < max_iterations:
-                    iteration += 1
-                    
-                    start_time = datetime.now()
-                    response = self.provider.invoke(self.chat_history)
-                    api_time = (datetime.now() - start_time).total_seconds()
-
-                    self.metrics.add_api_time(api_time)
-                    self._track_token_usage(response)
-
-                    # Check for tool calls
-                    if response.tool_calls:
-                        logger.info(f"ReAct iteration {iteration}: {len(response.tool_calls)} tool call(s)")
-                        
-                        # Add AI message with tool calls to history
-                        self.chat_history.append(response)
-                        
-                        # Execute all tool calls
-                        tool_outputs = self._handle_tool_calls(response.tool_calls)
-                        
-                        # Accumulate shell outputs for display
-                        if tool_outputs:
-                            try:
-                                outputs = json.loads(tool_outputs)
-                                for out in outputs:
-                                    if out.get('tool') == 'shell_run' and 'result' in out:
-                                        cmd = out.get('input', {}).get('command', 'unknown')
-                                        res = out.get('result', '').strip()
-                                        execution_trace.append(f"**Command:** `{cmd}`\n**Output:**\n```\n{res}\n```")
-                            except:
-                                pass
-                        
-                        # Continue loop to get next response
-                        continue
-                    else:
-                        # No tool calls - we're done
-                        break
-                
-                if iteration >= max_iterations:
-                    logger.warning(f"ReAct loop hit max iterations ({max_iterations})")
-
-                # Add final AI response to history
-                final_content = response.content or ""
-                
-                # Append execution trace if not empty
-                if execution_trace:
-                     trace_str = "\n\n---\n**Execution Log:**\n" + "\n\n".join(execution_trace)
-                     final_content += trace_str
-
-                if final_content:
-                    self.chat_history.append(AIMessage(content=final_content))
-
-                logger.debug(f"ReAct completed in {iteration} iteration(s)")
-                return final_content
-
-            except Exception as e:
-                error_str = str(e).lower()
-                
-                # Handle quota/rate limit errors
-                if any(x in error_str for x in ["429", "resource_exhausted", "rate_limit", "quota"]):
-                    if attempt < max_retries:
-                        delay = base_delay * (2 ** attempt)
-                        print(f"\n ⏳ Rate limited. Waiting {delay}s... (attempt {attempt + 1}/{max_retries})")
-                        time.sleep(delay)
-                        if self.chat_history and isinstance(self.chat_history[-1], HumanMessage):
-                            self.chat_history.pop()
-                        continue
-                    else:
-                        print(f"\n ❌ API quota exceeded. Try again in ~30 seconds or check your plan.")
-                        return None
-                
-                # Handle other errors cleanly
-                logger.error(f"Error: {e}")
-                logger.debug(traceback.format_exc())
-                return None
-
-    def _handle_tool_calls(self, tool_calls: List) -> Optional[str]:
-        """
-        Handle tool calls from LLM response.
-        
-        Args:
-            tool_calls: List of tool call dicts
+            start_time = datetime.now()
             
-        Returns:
-            Formatted tool results or None
-        """
-        if not tool_calls:
-            return None
-        
-        logger.info(f"Processing {len(tool_calls)} tool call(s)")
-        tool_results = []
-        
-        for tool_call in tool_calls:
-            tool_name = tool_call.get('name')
-            tool_input = tool_call.get('args', {})
-            tool_id = tool_call.get('id', 'unknown')
+            # Invoke Deep Agent
+            result = self.agent.invoke({"messages": self.chat_history})
             
-            logger.info(f"Executing tool: {tool_name} with input: {tool_input}")
+            api_time = (datetime.now() - start_time).total_seconds()
+            self.metrics.add_api_time(api_time)
+
+            # Update history with results
+            if "messages" in result:
+                self.chat_history = result["messages"]
+                # Get the last message content
+                final_content = self.chat_history[-1].content
+                return str(final_content)
             
-            # Local import to avoid circular dependency
-            from zuck.cli.display import Display
-            
-            # Find and execute the tool
-            tool_found = False
-            for tool in self.tools:
-                if tool.name == tool_name:
-                    try:
-                        result = tool.invoke(tool_input)
-                        tool_results.append({
-                            "tool": tool_name,
-                            "input": tool_input,
-                            "result": result
-                        })
-                        
-                        # Add tool message to chat history
-                        self.chat_history.append(ToolMessage(
-                            content=str(result),
-                            tool_call_id=tool_id
-                        ))
-                        
-                        logger.info(f"Tool {tool_name} executed successfully")
-                        
-                        # Special handling for planning tools
-                        if tool_name in ["create_plan", "get_current_plan"]:
-                            Display.print_plan(str(result))
-                        else:
-                            Display.print_tool_use(tool_name, tool_input, str(result))
-                            
-                        tool_found = True
-                        break
-                    except Exception as e:
-                        error_msg = f"Error executing tool {tool_name}: {str(e)}"
-                        logger.error(error_msg)
-                        tool_results.append({
-                            "tool": tool_name,
-                            "input": tool_input,
-                            "error": str(e)
-                        })
-                        Display.print_error(f"Error in {tool_name}: {str(e)}")
-                        tool_found = True
-                        break
-            
-            if not tool_found:
-                logger.warning(f"Tool not found: {tool_name}")
-                tool_results.append({
-                    "tool": tool_name,
-                    "error": "Tool not found"
-                })
-        
-        if tool_results:
-            return json.dumps(tool_results, indent=2)
-        
-        return None
+            return "No response from agent."
+
+        except Exception as e:
+            logger.error(f"Error in agent execution: {e}")
+            logger.debug(traceback.format_exc())
+            return f"Error: {e}"
 
     def run(self):
         """Run the interactive agent."""
