@@ -18,7 +18,7 @@ class AgentConfig(BaseModel):
     # LLM settings
     provider: str = os.getenv("ZUCK_PROVIDER", "groq")
     model_name: str = os.getenv("ZUCK_MODEL", "")
-    temperature: float = float(os.getenv("ZUCK_TEMPERATURE", "0.3"))
+    temperature: float = float(os.getenv("ZUCK_TEMPERATURE", "1.0"))
     
     # API Keys (from environment)
     google_api_key: Optional[str] = os.getenv("GOOGLE_API_KEY")

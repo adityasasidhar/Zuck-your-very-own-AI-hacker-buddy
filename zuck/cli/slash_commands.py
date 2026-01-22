@@ -137,9 +137,6 @@ class SlashCommands:
         table.add_row("groq", "compound", "AI system with web search & code execution")
         table.add_row("", "gpt-oss-120b", "OpenAI's open-weight, 500 tps (default)")
         table.add_row("", "gpt-oss-20b", "Smaller GPT-OSS, 1000 tps")
-        table.add_row("", "llama-4-scout-17b-16e-instruct", "Fast, good tools")
-        table.add_row("", "llama-4-maverick-17b-128e-instruct", "Enhanced version")
-        table.add_row("", "llama-3.3-70b-versatile", "Classic Llama")
         table.add_row("", "kimi-k2-instruct", "MoE with 131K context")
         
         # Ollama

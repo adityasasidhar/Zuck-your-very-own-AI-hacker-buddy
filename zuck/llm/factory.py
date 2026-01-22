@@ -35,9 +35,12 @@ def create_provider(config: "AgentConfig") -> Any:
              raise ValueError("GOOGLE_API_KEY not set")
 
         return ChatGoogleGenerativeAI(
-            model=config.model_name or "gemini-2.5-flash",
-            temperature=config.temperature,
+            model=config.model_name or "gemini-2.5-flash-lite",
+            temperature=1.0,
             google_api_key=config.google_api_key,
+            thinking=True,
+            max_tokens=None,
+            max_retries=3,
         )
     
     elif provider == "openai":
@@ -47,7 +50,7 @@ def create_provider(config: "AgentConfig") -> Any:
             raise ValueError("OPENAI_API_KEY not set")
 
         return ChatOpenAI(
-            model=config.model_name or "gpt-4",
+            model=config.model_name or "gpt-5",
             temperature=config.temperature,
             api_key=config.openai_api_key,
         )
