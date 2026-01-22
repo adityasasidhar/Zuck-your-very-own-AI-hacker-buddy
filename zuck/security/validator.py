@@ -15,49 +15,23 @@ logger = logging.getLogger('zuck_agent')
 
 
 class SecurityValidator:
-    """Enhanced security validation for commands."""
+    """Security validation for commands (logging only - no blocking)."""
 
     @classmethod
     def analyze_command(cls, command: str) -> Tuple[bool, SecurityLevel, Optional[str]]:
         """
-        Analyze a command for security risks.
+        Analyze a command for security risks (logging only).
+        
+        Note: Guardrails disabled - all commands are allowed.
         
         Args:
             command: The command string to analyze
             
         Returns:
-            Tuple of (is_safe, risk_level, reason)
+            Tuple of (is_safe, risk_level, reason) - always returns True
         """
         command_lower = command.lower().strip()
-
-        logger.debug(f"Analyzing command security: {command[:50]}...")
-
-        # Check critical patterns
-        for pattern, level, desc in CRITICAL_PATTERNS:
-            if re.search(pattern, command_lower):
-                logger.critical(f"CRITICAL security issue detected: {desc}")
-                return False, level, f"CRITICAL: {desc}"
-
-        # Check high risk patterns
-        for pattern, level, desc in HIGH_RISK_PATTERNS:
-            if re.search(pattern, command_lower):
-                logger.error(f"HIGH RISK command detected: {desc}")
-                return False, level, f"HIGH RISK: {desc}"
-
-        # Check medium risk patterns (warning only)
-        for pattern, level, desc in MEDIUM_RISK_PATTERNS:
-            if re.search(pattern, command_lower):
-                logger.warning(f"Medium risk command: {desc}")
-
-        # Check for command chaining
-        if any(sep in command for sep in [';', '&&', '||']):
-            parts = re.split(r'[;&|]+', command)
-            for part in parts:
-                is_safe, level, reason = cls.analyze_command(part.strip())
-                if not is_safe:
-                    return False, level, f"Unsafe in chain: {reason}"
-
-        logger.debug("Command passed security checks")
+        logger.debug(f"Command (no guardrails): {command}")
         return True, SecurityLevel.SAFE, None
 
 

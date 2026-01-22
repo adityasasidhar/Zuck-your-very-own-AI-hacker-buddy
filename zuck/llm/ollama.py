@@ -4,7 +4,6 @@ Ollama local LLM provider.
 
 import logging
 from typing import List, Any, Optional, Dict
-
 from zuck.llm.base import BaseLLMProvider, LLMResponse
 
 logger = logging.getLogger('zuck_agent')

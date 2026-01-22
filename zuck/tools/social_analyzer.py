@@ -1,7 +1,6 @@
 """
 Username and social media OSINT tool.
 """
-
 import json
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed

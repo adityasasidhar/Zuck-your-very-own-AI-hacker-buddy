@@ -15,16 +15,21 @@ from rich.table import Table
 
 # Custom theme
 zuck_theme = Theme({
-    "info": "cyan",
+    "info": "dim cyan",
     "warning": "yellow",
-    "error": "bold red",
-    "success": "bold green",
-    "hacker": "bold red",
-    "prompt": "bold red",
-    "agent_name": "bold magenta",
+    "error": "red",
+    "success": "green",
+    "hacker": "red",
+    "prompt": "dim white",
+    "agent_name": "blue",
+    "markdown.code": "cyan",
+    "markdown.code_block": "white",
+    "markdown.h1": "bold blue",
+    "markdown.h2": "blue",
+    "markdown.link": "dim cyan",
 })
 
-console = Console(theme=zuck_theme)
+console = Console(theme=zuck_theme, highlight=False)
 
 
 class Colors:
@@ -48,13 +53,13 @@ class Display:
     def print_banner():
         """Print the welcome banner."""
         banner_text = """
- ███████╗██╗   ██╗ ██████╗██╗  ██╗
- ╚══███╔╝██║   ██║██╔════╝██║ ██╔╝
-   ███╔╝ ██║   ██║██║     █████╔╝ 
-  ███╔╝  ██║   ██║██║     ██╔═██╗ 
- ███████╗╚██████╔╝╚██████╗██║  ██╗
- ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
- AI Cybersecurity Agent | 55 Tools | v2.2
+    ███████╗██╗   ██╗ ██████╗██╗  ██╗
+    ╚══███╔╝██║   ██║██╔════╝██║ ██╔╝
+     ███╔╝  ██║   ██║██║     █████╔╝ 
+    ███╔╝   ██║   ██║██║     ██╔═██╗ 
+    ███████╗╚██████╔╝╚██████╗██║  ██╗
+    ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
+    AI Cybersecurity Agent | 55 Tools | v2.2
 """
         console.print(f"[hacker]{banner_text}[/hacker]")
 
@@ -83,15 +88,26 @@ class Display:
     @staticmethod
     def get_user_input() -> str:
         """Get input from the user."""
+        # Local import to avoid circular dependency
+        from zuck.cli.autocomplete import InputHandler
+        
+        if not hasattr(Display, '_input_handler'):
+            Display._input_handler = InputHandler()
+            
         try:
-            return console.input("[bold red]> [/bold red]")
+            # Using prompt_toolkit session
+            from rich.console import Console
+            c = Console()
+            # Print the prompt manually with rich to keep styling consistent
+            # c.print("[bold red]> [/bold red]", end="")
+            # Actually prompt_toolkit handles the prompt better for cursor positioning
+            return Display._input_handler.get_input([('class:prompt', '> ')])
         except (KeyboardInterrupt, EOFError):
             return "quit"
 
     @staticmethod
     def print_thinking():
         """Print thinking indicator."""
-        # Note: In a real async loop this would be a spinner context manager
         console.print(" ... ", style="dim", end="")
 
     @staticmethod
@@ -103,7 +119,7 @@ class Display:
         console.print("[bold magenta]Zuck[/bold magenta]")
         
         # Render markdown content
-        md = Markdown(message)
+        md = Markdown(message, code_theme="manni")
         console.print(md)
         console.print()
 
@@ -111,11 +127,11 @@ class Display:
     def print_plan(plan_output: str):
         """Print the plan prominently."""
         console.print()
-        console.print("📝 [bold yellow]EXECUTION PLAN[/bold yellow]")
+        console.print(" [bold yellow]EXECUTION PLAN[/bold yellow]")
         console.print()
         
         # Render markdown content
-        md = Markdown(plan_output)
+        md = Markdown(plan_output, code_theme="manni")
         console.print(md)
         console.print()
 
@@ -145,6 +161,16 @@ class Display:
 - `tools`   : List all available tools
 - `clear`   : Clear the screen
 - `quit`    : Exit the session
+
+# Slash Commands (Quick Access)
+
+- `/tools`     : Browse all tools by category
+- `/models`    : Show available models per provider
+- `/providers` : List supported LLM providers
+- `/config`    : Show current configuration
+- `/session`   : Show session statistics
+- `/shell`     : Show shell session info
+- `/help`      : Show slash command help
 
 # Examples
 

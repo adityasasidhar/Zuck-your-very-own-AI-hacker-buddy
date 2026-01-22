@@ -8,6 +8,7 @@ import traceback
 import logging
 
 from zuck.cli.display import Display, Colors
+from zuck.cli.slash_commands import SlashCommands
 
 logger = logging.getLogger('zuck_agent')
 
@@ -19,6 +20,7 @@ class REPL:
         """Initialize the REPL."""
         self.agent = agent
         self.session = agent.session
+        self.slash_commands = SlashCommands(agent)
     
     def run(self):
         """Run the interactive REPL loop."""
@@ -47,6 +49,11 @@ class REPL:
 
                 if not user_input:
                     continue
+
+                # Handle slash commands first
+                if user_input.startswith('/'):
+                    if self.slash_commands.handle(user_input):
+                        continue
 
                 # Handle special commands
                 if user_input.lower() in ['quit', 'exit', 'bye', 'q']:

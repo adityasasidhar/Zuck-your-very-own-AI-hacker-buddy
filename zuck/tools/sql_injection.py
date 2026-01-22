@@ -25,13 +25,3 @@ def sqli_payloads(payload_type: str = "basic") -> str:
         return json.dumps({"payloads": SQLI_PAYLOADS.get(payload_type, [])}, indent=2)
     except Exception as e:
         return f"Error: {e}"
-
-@tool
-def generate_sqlmap_command(url: str, mode: str = "basic") -> str:
-    """Generate sqlmap command. Modes: basic, aggressive, dump"""
-    cmds = {
-        "basic": f"sqlmap -u \"{url}\" --batch --dbs",
-        "aggressive": f"sqlmap -u \"{url}\" --batch --level=5 --risk=3",
-        "dump": f"sqlmap -u \"{url}\" --batch --dump-all"
-    }
-    return json.dumps({"command": cmds.get(mode, cmds["basic"])}, indent=2)

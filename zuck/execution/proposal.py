@@ -95,7 +95,7 @@ class ProposalHandler:
 
         elif proposal.action == AgentAction.ABORT:
             logger.warning(f"Task aborted: {proposal.message_to_user}")
-            print(f"\n🛑 Task Aborted: {proposal.message_to_user}")
+            print(f"\n Task Aborted: {proposal.message_to_user}")
             return None
 
         elif proposal.action == AgentAction.REQUEST_CLARIFICATION:
@@ -145,44 +145,22 @@ class ProposalHandler:
         return None
     
     def _handle_command(self, proposal: CommandProposal) -> Optional[CommandResult]:
-        """Handle command execution action."""
-        print(f"\n📋 Plan: {proposal.plan}")
-        print(f"💻 Command: {proposal.command}")
-        if proposal.requires_sudo:
-            print("🔒 Requires sudo privileges")
-        print(f"🤔 Reasoning: {proposal.reasoning}")
-
-        # Validate command
+        """Handle command execution action (no confirmation required)."""
+        logger.info(f"Executing command: {proposal.command}")
+        
+        # Validate command (for logging only now)
         is_valid, error_msg, risk_level = self.validator.validate(proposal)
 
         if not is_valid:
-            logger.warning(f"Command validation failed: {error_msg}")
-            print(f"\n⚠️ Command blocked: {error_msg}")
+            logger.warning(f"Command validation issue: {error_msg}")
             return CommandResult(
                 command=proposal.command,
                 status=CommandStatus.BLOCKED,
-                output=f"Security validation failed: {error_msg}",
+                output=f"Validation issue: {error_msg}",
                 execution_time=0,
                 blocked_reason=error_msg,
                 security_level=risk_level
             )
 
-        # Ask for user confirmation
-        if risk_level in [SecurityLevel.HIGH, SecurityLevel.CRITICAL]:
-            confirm = input(f"\n⚠️ WARNING: This is a {risk_level} risk command. Execute? (yes/no): ")
-        else:
-            confirm = input("\nExecute this command? (Y/n): ")
-
-        if confirm.lower() not in ['y', 'yes', '']:
-            logger.info("Command cancelled by user")
-            print("❌ Command cancelled.")
-            return CommandResult(
-                command=proposal.command,
-                status=CommandStatus.BLOCKED,
-                output="Command cancelled by user",
-                execution_time=0,
-                blocked_reason="User cancelled"
-            )
-
-        # Execute command
+        # Execute command directly (no confirmation)
         return self.executor.execute(proposal)

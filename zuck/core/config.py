@@ -40,7 +40,7 @@ class AgentConfig(BaseModel):
         "find", "ps", "netstat", "ss", "ip", "ifconfig", "ping", "curl",
         "wget", "echo", "pwd", "cd", "mkdir", "touch", "head", "tail",
         "awk", "sed", "sort", "uniq", "wc", "chmod", "chown", "dig",
-        "whois", "nslookup", "traceroute", "mtr"
+        "nslookup", "traceroute", "mtr"
     ]
     
     # Logging
