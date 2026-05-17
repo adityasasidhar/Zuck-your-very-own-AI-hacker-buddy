@@ -1,4 +1,4 @@
-# Zuck - Your Very Own AI Hacker Buddy
+# Zuck - Offense first agent
 
 **Zuck** is an elite AI-powered cybersecurity assistant designed for penetration testing, security research, and offensive security operations. Built on LangChain and powered by multiple LLM providers, Zuck provides a sophisticated command-line interface with persistent shell access, specialized security tools, and intelligent automation capabilities.
 
